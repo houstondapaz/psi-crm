@@ -1,0 +1,178 @@
+model Practice {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  users           User[]
+  patients        Patient[]
+  products        Product[]
+  labels          Label[]
+  sessions        Session[]
+  contacts        Contact[]
+  reminders       Reminder[]
+  referrals           Referral[]
+  fileLinks           FileLink[]
+  sentAlertEmails     SentAlertEmail[]
+  sessionAnnotations  SessionAnnotation[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  practiceId   String
+  practice     Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  sentAlertEmails SentAlertEmail[]
+}
+
+model Patient {
+  id         String   @id @default(uuid())
+  practiceId String
+  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  name       String
+  email      String?
+  phone      String?
+  createdAt  DateTime @default(now())
+
+  sessions  Session[]
+  contacts  Contact[]
+  reminders Reminder[]
+  referrals Referral[]
+  labels    PatientLabel[]
+}
+
+model Session {
+  id          String    @id @default(uuid())
+  practiceId  String
+  practice    Practice  @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  patientId   String
+  patient     Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  scheduledAt DateTime?
+  occurredAt  DateTime?
+  status      String    @default("completed")
+  createdAt   DateTime  @default(now())
+
+  referrals   Referral[]
+  fileLinks   FileLink[]
+  annotations SessionAnnotation[]
+  labels      SessionLabel[]
+}
+
+model SessionAnnotation {
+  id         String   @id @default(uuid())
+  practiceId String
+  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  content    String
+  recordedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+}
+
+model Contact {
+  id          String   @id @default(uuid())
+  practiceId  String
+  practice    Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type        String
+  description String?
+  occurredAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Reminder {
+  id          String    @id @default(uuid())
+  practiceId  String
+  practice    Practice  @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  patientId   String
+  patient     Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  description String?
+  targetDate  DateTime
+  status      String    @default("pending")
+  resolvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  practiceId  String
+  practice    Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  referrals Referral[]
+}
+
+model Label {
+  id         String   @id @default(uuid())
+  practiceId String
+  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  name       String
+  color      String
+  createdAt  DateTime @default(now())
+
+  patientLabels PatientLabel[]
+  sessionLabels SessionLabel[]
+
+  @@unique([practiceId, name])
+}
+
+model PatientLabel {
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  labelId   String
+  label     Label   @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([patientId, labelId])
+}
+
+model SessionLabel {
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  labelId   String
+  label     Label   @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, labelId])
+}
+
+model Referral {
+  id         String    @id @default(uuid())
+  practiceId String
+  practice   Practice  @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  sessionId  String
+  session    Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  patientId  String
+  patient    Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sold       Boolean
+  soldAt     DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model FileLink {
+  id         String   @id @default(uuid())
+  practiceId String
+  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  label      String
+  url        String
+  createdAt  DateTime @default(now())
+}
+
+model SentAlertEmail {
+  id            String   @id @default(uuid())
+  practiceId    String
+  practice      Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referenceType String
+  referenceId   String
+  sentAt        DateTime @default(now())
+}

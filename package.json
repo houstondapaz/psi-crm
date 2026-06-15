@@ -1,0 +1,42 @@
+{
+  "name": "crm-psi",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "contract:emit": "prisma-next contract emit",
+    "db:init": "prisma-next db init",
+    "db:update": "prisma-next db update -y",
+    "db:verify": "prisma-next db verify"
+  },
+  "dependencies": {
+    "@prisma-next/postgres": "^0.13.0",
+    "bcryptjs": "^3.0.2",
+    "next": "^15.3.4",
+    "next-auth": "^5.0.0-beta.28",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.10",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.15.32",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "dotenv": "^16.6.1",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "^15.3.4",
+    "prisma-next": "^0.13.0",
+    "tailwindcss": "^4.1.10",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

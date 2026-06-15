@@ -1,0 +1,90 @@
+"use client";
+
+import { useRef } from "react";
+import { scheduleSessionAction } from "@/app/actions/domain";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
+
+type PatientOption = {
+  id: string;
+  name: string;
+};
+
+type CreateSessionModalProps = {
+  patients: PatientOption[];
+};
+
+export function CreateSessionModal({ patients }: CreateSessionModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  function openModal() {
+    dialogRef.current?.showModal();
+  }
+
+  function closeModal() {
+    dialogRef.current?.close();
+  }
+
+  return (
+    <>
+      <Button type="button" onClick={openModal}>
+        Nova sessão
+      </Button>
+
+      <dialog
+        ref={dialogRef}
+        className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-0 shadow-xl backdrop:bg-black/40"
+        onClose={closeModal}
+      >
+        <form action={scheduleSessionAction} className="space-y-4 p-6">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Nova sessão</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Escolha o paciente e a data da sessão
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="create-session-patient">Paciente</Label>
+            <Select
+              className="mt-1"
+              id="create-session-patient"
+              name="patientId"
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Selecione um paciente...
+              </option>
+              {patients.map((patient) => (
+                <option key={patient.id} value={patient.id}>
+                  {patient.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="create-session-date">Data e hora</Label>
+            <Input
+              className="mt-1"
+              id="create-session-date"
+              name="scheduledAt"
+              type="datetime-local"
+              required
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="secondary" type="button" onClick={closeModal}>
+              Cancelar
+            </Button>
+            <Button type="submit">Criar sessão</Button>
+          </div>
+        </form>
+      </dialog>
+    </>
+  );
+}
