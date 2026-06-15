@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatDate, formatDateTime } from "@/lib/i18n/format";
+import { formatDate, formatDateTime, formatSessionDateTime } from "@/lib/i18n/format";
 
 describe("date formatters", () => {
   const date = new Date("2026-06-15T14:00:00");
@@ -25,5 +25,9 @@ describe("date formatters", () => {
     expect(formatted).toContain("06");
     expect(formatted).toContain("2026");
     expect(formatted).toContain("14");
+  });
+
+  it("formats session date-times with shared options", () => {
+    expect(formatSessionDateTime(date)).toContain("15/06/2026");
   });
 });

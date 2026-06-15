@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AnnotationCard } from "@/components/annotation-card";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { FileLinkCard } from "@/components/file-link-card";
+import { formatSessionDateTime, t } from "@/lib/i18n";
 
 function toDatetimeLocalValue(date: Date | null) {
   if (!date) {
@@ -33,16 +34,6 @@ function toDatetimeLocalValue(date: Date | null) {
   const offset = date.getTimezoneOffset();
   const local = new Date(date.getTime() - offset * 60 * 1000);
   return local.toISOString().slice(0, 16);
-}
-
-function formatRecordedAt(date: Date) {
-  return date.toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 export default async function SessionDetailPage({
@@ -70,7 +61,7 @@ export default async function SessionDetailPage({
           href="/sessions"
           className="text-sm font-medium text-gray-600 transition hover:text-gray-900"
         >
-          ← Sessões
+          {t("common.backToSessions")}
         </Link>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -88,34 +79,34 @@ export default async function SessionDetailPage({
       <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
         <div className="space-y-8 lg:col-span-2">
           <section className="space-y-4">
-            <h2 className="text-lg font-medium text-gray-900">Anotações</h2>
+            <h2 className="text-lg font-medium text-gray-900">{t("sessions.annotations")}</h2>
             {session.annotations.map((annotation) => (
               <AnnotationCard
                 key={annotation.id}
                 sessionId={session.id}
                 annotationId={annotation.id}
                 content={annotation.content}
-                recordedAtLabel={formatRecordedAt(annotation.recordedAt)}
+                recordedAtLabel={formatSessionDateTime(annotation.recordedAt)}
                 recordedAtValue={toDatetimeLocalValue(annotation.recordedAt)}
               />
             ))}
             <Card className="space-y-4">
-              <h3 className="font-medium text-gray-900">Nova anotação</h3>
+              <h3 className="font-medium text-gray-900">{t("sessions.newAnnotation")}</h3>
               <form action={createAnnotationAction} className="space-y-3">
                 <input type="hidden" name="sessionId" value={session.id} />
                 <Textarea
                   name="content"
-                  placeholder="Escreva uma anotação clínica..."
+                  placeholder={t("sessions.annotationPlaceholder")}
                   className="min-h-24"
                   required
                 />
-                <Button type="submit">Adicionar anotação</Button>
+                <Button type="submit">{t("sessions.addAnnotation")}</Button>
               </form>
             </Card>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-lg font-medium text-gray-900">Links</h2>
+            <h2 className="text-lg font-medium text-gray-900">{t("sessions.links")}</h2>
             {session.fileLinks.map((link) => (
               <FileLinkCard
                 key={link.id}
@@ -126,18 +117,18 @@ export default async function SessionDetailPage({
               />
             ))}
             <Card className="space-y-4">
-              <h3 className="font-medium text-gray-900">Adicionar link</h3>
+              <h3 className="font-medium text-gray-900">{t("sessions.addLink")}</h3>
               <form action={addFileLinkAction} className="space-y-3">
                 <input type="hidden" name="sessionId" value={session.id} />
-                <Input name="label" placeholder="Rótulo" required />
-                <Input name="url" placeholder="URL Google Drive" required />
-                <Button type="submit">Adicionar link</Button>
+                <Input name="label" placeholder={t("sessions.linkLabel")} required />
+                <Input name="url" placeholder={t("sessions.linkUrl")} required />
+                <Button type="submit">{t("sessions.addLink")}</Button>
               </form>
             </Card>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-lg font-medium text-gray-900">Indicações</h2>
+            <h2 className="text-lg font-medium text-gray-900">{t("sessions.referrals")}</h2>
             {session.referrals.map((referral) => (
               <Card key={referral.id}>
                 <div className="flex flex-wrap items-center gap-3">
@@ -145,7 +136,7 @@ export default async function SessionDetailPage({
                     {referral.productName}
                   </span>
                   {referral.sold ? (
-                    <Badge variant="success">Vendido</Badge>
+                    <Badge variant="success">{t("sessions.sold")}</Badge>
                   ) : (
                     <>
                       <form action={markSoldAction}>
@@ -156,7 +147,7 @@ export default async function SessionDetailPage({
                           value={referral.id}
                         />
                         <Button variant="secondary" type="submit">
-                          Marcar vendido
+                          {t("sessions.markSold")}
                         </Button>
                       </form>
                       <form action={deleteReferralAction}>
@@ -167,7 +158,7 @@ export default async function SessionDetailPage({
                           value={referral.id}
                         />
                         <Button variant="ghost" type="submit">
-                          Excluir
+                          {t("common.delete")}
                         </Button>
                       </form>
                     </>
@@ -177,12 +168,12 @@ export default async function SessionDetailPage({
             ))}
             {products.length > 0 && (
               <Card className="space-y-4">
-                <h3 className="font-medium text-gray-900">Indicar produto</h3>
+                <h3 className="font-medium text-gray-900">{t("sessions.referProduct")}</h3>
                 <form action={createReferralAction} className="space-y-3">
                   <input type="hidden" name="sessionId" value={session.id} />
                   <input type="hidden" name="patientId" value={session.patientId} />
                   <Select name="productId" required>
-                    <option value="">Selecione um produto...</option>
+                    <option value="">{t("common.selectProduct")}</option>
                     {products.map((product) => (
                       <option key={product.id} value={product.id}>
                         {product.name}
@@ -190,7 +181,7 @@ export default async function SessionDetailPage({
                     ))}
                   </Select>
                   <Button variant="secondary" type="submit">
-                    Indicar
+                    {t("sessions.refer")}
                   </Button>
                 </form>
               </Card>
@@ -200,7 +191,7 @@ export default async function SessionDetailPage({
 
         <aside className="space-y-6 lg:sticky lg:top-6">
           <Card className="space-y-4">
-            <h2 className="text-lg font-medium text-gray-900">Etiquetas</h2>
+            <h2 className="text-lg font-medium text-gray-900">{t("patients.labels")}</h2>
             <EtiquetaPicker
               attached={attachedLabels}
               catalog={catalog}
@@ -211,23 +202,23 @@ export default async function SessionDetailPage({
             />
           </Card>
           <Card className="space-y-4">
-            <h2 className="text-lg font-medium text-gray-900">Dados da sessão</h2>
+            <h2 className="text-lg font-medium text-gray-900">{t("sessions.sessionData")}</h2>
             <form action={updateSessionAction} className="space-y-4">
               <input type="hidden" name="sessionId" value={session.id} />
               <div>
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">{t("common.status")}</Label>
                 <Select
                   className="mt-1"
                   id="status"
                   name="status"
                   defaultValue={session.status}
                 >
-                  <option value="scheduled">scheduled</option>
-                  <option value="completed">completed</option>
+                  <option value="scheduled">{t("sessions.statusScheduled")}</option>
+                  <option value="completed">{t("sessions.statusCompleted")}</option>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="scheduledAt">Agendada para</Label>
+                <Label htmlFor="scheduledAt">{t("sessions.scheduledFor")}</Label>
                 <Input
                   className="mt-1"
                   id="scheduledAt"
@@ -237,7 +228,7 @@ export default async function SessionDetailPage({
                 />
               </div>
               <div>
-                <Label htmlFor="occurredAt">Realizada em</Label>
+                <Label htmlFor="occurredAt">{t("sessions.occurredAt")}</Label>
                 <Input
                   className="mt-1"
                   id="occurredAt"
@@ -247,7 +238,7 @@ export default async function SessionDetailPage({
                 />
               </div>
               <Button type="submit" className="w-full">
-                Salvar dados
+                {t("sessions.saveData")}
               </Button>
             </form>
           </Card>

@@ -10,6 +10,7 @@ import {
   formatAgendaDateParam,
   isSameDay,
 } from "@/lib/agenda-utils";
+import { formatTime, formatWeekdayShort, getWeekdayLabels, t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -20,13 +21,10 @@ type AgendaCalendarProps = {
   title: string;
 };
 
-const weekdayLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+const weekdayLabels = getWeekdayLabels();
 
 function formatEventTime(startsAt: string) {
-  return new Date(startsAt).toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatTime(new Date(startsAt));
 }
 
 function eventStyles(type: AgendaEvent["type"]) {
@@ -70,9 +68,9 @@ function ViewToggle({
   anchorDate: string;
 }) {
   const options: { id: AgendaView; label: string }[] = [
-    { id: "month", label: "Mês" },
-    { id: "week", label: "Semana" },
-    { id: "day", label: "Dia" },
+    { id: "month", label: t("agenda.viewMonth") },
+    { id: "week", label: t("agenda.viewWeek") },
+    { id: "day", label: t("agenda.viewDay") },
   ];
 
   return (
@@ -146,7 +144,9 @@ function MonthView({
                   <AgendaEventLink key={`${event.type}-${event.id}`} event={event} />
                 ))}
                 {dayEvents.length > 3 && (
-                  <p className="text-xs text-gray-500">+{dayEvents.length - 3} mais</p>
+                  <p className="text-xs text-gray-500">
+                    {t("agenda.moreEvents", { count: dayEvents.length - 3 })}
+                  </p>
                 )}
               </div>
             </div>
@@ -178,7 +178,7 @@ function WeekView({
           <Card key={day.toISOString()} className="space-y-3">
             <div>
               <p className="text-xs uppercase text-gray-500">
-                {day.toLocaleDateString("pt-BR", { weekday: "short" })}
+                {formatWeekdayShort(day)}
               </p>
               <p
                 className={`text-lg font-semibold ${
@@ -190,7 +190,7 @@ function WeekView({
             </div>
             <div className="space-y-2">
               {dayEvents.length === 0 && (
-                <p className="text-xs text-gray-500">Sem eventos</p>
+                <p className="text-xs text-gray-500">{t("agenda.noEvents")}</p>
               )}
               {dayEvents.map((event) => (
                 <Link
@@ -228,7 +228,7 @@ function DayView({
   return (
     <Card className="space-y-3">
       {dayEvents.length === 0 && (
-        <p className="text-sm text-gray-600">Nenhum evento neste dia.</p>
+        <p className="text-sm text-gray-600">{t("agenda.noEventsDay")}</p>
       )}
       {dayEvents.map((event) => (
         <Link
@@ -287,7 +287,7 @@ export function AgendaCalendar({
             type="button"
             onClick={() => goTo(formatAgendaDateParam(new Date()))}
           >
-            Hoje
+            {t("agenda.today")}
           </Button>
           <ViewToggle view={view} anchorDate={anchorDate} />
         </div>
@@ -296,11 +296,11 @@ export function AgendaCalendar({
       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 rounded bg-gray-900" />
-          Sessão
+          {t("agenda.legendSession")}
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 rounded bg-amber-200" />
-          Lembrete
+          {t("agenda.legendReminder")}
         </span>
       </div>
 

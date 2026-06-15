@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { LABEL_COLORS, LABEL_COLOR_CLASSES, type LabelColor } from "@/lib/label-colors";
+import { LOCALE, t } from "@/lib/i18n";
 import { LabelChip } from "@/components/label-chip";
 
 export type EtiquetaOption = {
@@ -35,7 +36,7 @@ function buildFormData(
 }
 
 function normalizeQuery(value: string) {
-  return value.trim().toLocaleLowerCase("pt-BR");
+  return value.trim().toLocaleLowerCase(LOCALE);
 }
 
 export function EtiquetaPicker({
@@ -188,8 +189,8 @@ export function EtiquetaPicker({
               detachLabel(label.id);
             }}
             className="group inline-flex items-center gap-0.5 rounded-full transition hover:opacity-80"
-            title={`Remover ${label.name}`}
-            aria-label={`Remover etiqueta ${label.name}`}
+            title={t("labels.remove", { name: label.name })}
+            aria-label={t("labels.removeAria", { name: label.name })}
           >
             <LabelChip name={label.name} color={label.color} />
             <span className="pr-0.5 text-xs text-gray-400 group-hover:text-gray-600">×</span>
@@ -210,7 +211,7 @@ export function EtiquetaPicker({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleInputKeyDown}
-          placeholder={attached.length === 0 ? "Buscar ou criar etiqueta…" : ""}
+          placeholder={attached.length === 0 ? t("labels.searchPlaceholder") : ""}
           className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1.5 text-sm text-gray-900 outline-none placeholder:text-gray-400"
         />
       </div>
@@ -248,7 +249,7 @@ export function EtiquetaPicker({
                 onMouseEnter={() => setActiveIndex(suggestions.length)}
               >
                 <p className="text-sm font-medium text-gray-900">
-                  Criar etiqueta &ldquo;{query.trim()}&rdquo;
+                  {t("labels.createNamed", { name: query.trim() })}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <div className="flex flex-wrap gap-1">
@@ -269,7 +270,7 @@ export function EtiquetaPicker({
                     onClick={createLabel}
                     className="rounded-sm bg-gray-900 px-3 py-1 text-xs font-medium text-white transition hover:bg-gray-700"
                   >
-                    Criar e aplicar
+                    {t("labels.createAndApply")}
                   </button>
                 </div>
               </div>
@@ -279,7 +280,7 @@ export function EtiquetaPicker({
       )}
 
       {attached.length === 0 && !open && !query && (
-        <p className="mt-2 text-sm text-gray-500">Nenhuma etiqueta aplicada.</p>
+        <p className="mt-2 text-sm text-gray-500">{t("labels.noneApplied")}</p>
       )}
     </div>
   );

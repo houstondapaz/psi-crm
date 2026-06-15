@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { LOCALE, t } from "@/lib/i18n";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CRM Psi",
-  description: "Controle de pacientes e atendimentos para psicólogos",
+  title: t("common.appName"),
+  description: t("app.metadataDescription"),
 };
 
 export default function RootLayout({
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang={LOCALE}>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         {children}
       </body>

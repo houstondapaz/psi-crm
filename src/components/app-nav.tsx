@@ -3,6 +3,7 @@ import Link from "next/link";
 import { signOut } from "@/lib/auth";
 import { requireAuth } from "@/lib/auth/session";
 import { Button } from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 
 export async function AppNav() {
   const auth = await requireAuth();
@@ -12,38 +13,38 @@ export async function AppNav() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="flex items-center gap-6">
           <Link href="/dashboard" className="text-lg font-bold text-gray-900">
-            CRM Psi
+            {t("common.appName")}
           </Link>
           <nav className="flex gap-4 text-sm font-medium text-gray-600">
             <Link
               href="/dashboard"
               className="transition hover:text-gray-900"
             >
-              Agenda
+              {t("app.navAgenda")}
             </Link>
             <Link
               href="/patients"
               className="transition hover:text-gray-900"
             >
-              Pacientes
+              {t("app.navPatients")}
             </Link>
             <Link
               href="/sessions"
               className="transition hover:text-gray-900"
             >
-              Sessões
+              {t("app.navSessions")}
             </Link>
             <Link
               href="/products"
               className="transition hover:text-gray-900"
             >
-              Produtos
+              {t("app.navProducts")}
             </Link>
             <Link
               href="/labels"
               className="transition hover:text-gray-900"
             >
-              Etiquetas
+              {t("app.navLabels")}
             </Link>
           </nav>
         </div>
@@ -58,7 +59,7 @@ export async function AppNav() {
             }}
           >
             <Button variant="secondary" type="submit">
-              Sair
+              {t("app.signOut")}
             </Button>
           </form>
         </div>

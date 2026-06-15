@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { formatSessionDateTime, t } from "@/lib/i18n";
 
 function formatSessionDate(session: {
   status: string;
@@ -29,15 +30,9 @@ function formatSessionDate(session: {
   const date =
     session.status === "scheduled" ? session.scheduledAt : session.occurredAt;
   if (!date) {
-    return "Sem data";
+    return t("common.noDate");
   }
-  return date.toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatSessionDateTime(date);
 }
 
 export default async function PatientDetailPage({
@@ -67,13 +62,13 @@ export default async function PatientDetailPage({
           href="/patients"
           className="text-sm font-medium text-gray-600 transition hover:text-gray-900"
         >
-          ← Pacientes
+          {t("common.backToPatients")}
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-gray-900">{patient.name}</h1>
       </div>
 
       <Card className="space-y-4">
-        <h2 className="text-lg font-medium text-gray-900">Etiquetas</h2>
+        <h2 className="text-lg font-medium text-gray-900">{t("patients.labels")}</h2>
         <EtiquetaPicker
           attached={attachedLabels}
           catalog={catalog}
@@ -86,19 +81,19 @@ export default async function PatientDetailPage({
 
       <section className="grid gap-6 lg:grid-cols-2">
         <Card className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900">Nova sessão</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("patients.newSession")}</h2>
           <form action={createSessionAction}>
             <input type="hidden" name="patientId" value={id} />
-            <Button type="submit">Registrar sessão</Button>
+            <Button type="submit">{t("patients.registerSession")}</Button>
           </form>
         </Card>
 
         <Card className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900">Agendar sessão</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("patients.scheduleSession")}</h2>
           <form action={scheduleSessionAction} className="space-y-4">
             <input type="hidden" name="patientId" value={id} />
             <div>
-              <Label htmlFor="scheduledAt">Data e hora</Label>
+              <Label htmlFor="scheduledAt">{t("common.datetime")}</Label>
               <Input
                 className="mt-1"
                 id="scheduledAt"
@@ -107,16 +102,16 @@ export default async function PatientDetailPage({
                 required
               />
             </div>
-            <Button type="submit">Agendar</Button>
+            <Button type="submit">{t("patients.schedule")}</Button>
           </form>
         </Card>
 
         <Card className="space-y-4 lg:col-span-2">
-          <h2 className="text-lg font-medium text-gray-900">Novo lembrete</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("patients.newReminder")}</h2>
           <form action={createReminderAction} className="grid gap-4 sm:grid-cols-2">
             <input type="hidden" name="patientId" value={id} />
             <div>
-              <Label htmlFor="targetDate">Data alvo</Label>
+              <Label htmlFor="targetDate">{t("common.targetDate")}</Label>
               <Input
                 className="mt-1"
                 id="targetDate"
@@ -126,25 +121,25 @@ export default async function PatientDetailPage({
               />
             </div>
             <div>
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">{t("common.description")}</Label>
               <Input
                 className="mt-1"
                 id="description"
                 name="description"
-                placeholder="Ex: retomar contato"
+                placeholder={t("patients.reminderPlaceholder")}
               />
             </div>
             <div className="sm:col-span-2">
-              <Button type="submit">Criar lembrete</Button>
+              <Button type="submit">{t("patients.createReminder")}</Button>
             </div>
           </form>
         </Card>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-medium text-gray-900">Sessões</h2>
+        <h2 className="text-lg font-medium text-gray-900">{t("patients.sessions")}</h2>
         {sessions.length === 0 && (
-          <p className="text-sm text-gray-600">Nenhuma sessão registrada.</p>
+          <p className="text-sm text-gray-600">{t("patients.noSessions")}</p>
         )}
         {sessions.map((session) => (
           <Card key={session.id}>
@@ -157,7 +152,7 @@ export default async function PatientDetailPage({
                 href={`/sessions/${session.id}`}
                 className="inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
               >
-                Ver sessão
+                {t("common.viewSession")}
               </Link>
             </div>
           </Card>
@@ -166,11 +161,11 @@ export default async function PatientDetailPage({
 
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-3">
-          <h2 className="text-lg font-medium text-gray-900">Lembretes</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("patients.reminders")}</h2>
           {reminders.map((reminder) => (
             <Card key={reminder.id}>
               <p className="font-medium text-gray-900">
-                {reminder.description ?? "Retomar contato"}
+                {reminder.description ?? t("common.defaultReminder")}
               </p>
               <p className="text-sm text-gray-600">
                 {new Date(reminder.targetDate).toISOString().slice(0, 10)} ·{" "}
@@ -182,7 +177,7 @@ export default async function PatientDetailPage({
                   <input type="hidden" name="reminderId" value={reminder.id} />
                   <input type="hidden" name="type" value="whatsapp" />
                   <Button variant="secondary" type="submit">
-                    Registrar contato
+                    {t("patients.registerContact")}
                   </Button>
                 </form>
               )}
@@ -190,12 +185,12 @@ export default async function PatientDetailPage({
           ))}
         </div>
         <div className="space-y-3">
-          <h2 className="text-lg font-medium text-gray-900">Contatos</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("patients.contacts")}</h2>
           {contacts.map((contact) => (
             <Card key={contact.id}>
               <p className="font-medium capitalize text-gray-900">{contact.type}</p>
               <p className="text-sm text-gray-600">
-                {contact.occurredAt.toLocaleString("pt-BR")}
+                {formatSessionDateTime(contact.occurredAt)}
               </p>
               {contact.description && (
                 <p className="text-sm text-gray-700">{contact.description}</p>

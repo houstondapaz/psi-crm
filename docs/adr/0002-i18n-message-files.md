@@ -13,7 +13,7 @@ ADR 0001 kept UI copy hardcoded in Portuguese. As the app grows, scattered strin
 1. Externalize UI copy to `src/lib/i18n/messages/pt-BR.ts` with a typed `t(key)` helper.
 2. Ship **pt-BR only** for now — no language switcher, no locale URL prefix.
 3. Centralize locale in `LOCALE` (`pt-BR`) and route date/time formatting through `formatDate` / `formatDateTime`.
-4. Migrate incrementally by vertical slice; v1 covers auth pages (`/login`, `/register`) and refactors `agenda-utils.ts` date labels.
+4. Migrate incrementally by vertical slice; v1 covers auth pages (`/login`, `/register`) and refactors `agenda-utils.ts` date labels. Subsequent work migrated the remaining app shell, pages, and components.
 
 Domain glossary terms in `CONTEXT.md` remain Portuguese regardless of future locales.
 
@@ -28,8 +28,8 @@ Domain glossary terms in `CONTEXT.md` remain Portuguese regardless of future loc
 
 ### Negative
 
-- Most pages still have hardcoded Portuguese until migrated.
 - Adding a second locale later requires locale selection, routing, and message file duplication work not done in v1.
+- Session/reminder status badges still show raw enum values (`scheduled`, `pending`) in a few places.
 
 ## Alternatives considered
 

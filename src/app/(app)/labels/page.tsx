@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
+import { t } from "@/lib/i18n";
 
 export default async function LabelsPage() {
   const auth = await requireAuth();
@@ -21,8 +22,8 @@ export default async function LabelsPage() {
     <main className="mx-auto grid max-w-5xl gap-6 p-4 sm:p-6 lg:grid-cols-2">
       <section className="space-y-4">
         <PageHeader
-          title="Etiquetas"
-          description="Catálogo central do consultório para classificar pacientes e sessões"
+          title={t("labels.title")}
+          description={t("labels.description")}
         />
         <div className="space-y-3">
           {labels.map((label) => (
@@ -32,14 +33,14 @@ export default async function LabelsPage() {
                 <form action={deleteLabelAction}>
                   <input type="hidden" name="labelId" value={label.id} />
                   <Button type="submit" variant="ghost">
-                    Excluir
+                    {t("common.delete")}
                   </Button>
                 </form>
               </div>
               <form action={updateLabelAction} className="space-y-3">
                 <input type="hidden" name="labelId" value={label.id} />
                 <div>
-                  <Label htmlFor={`name-${label.id}`}>Nome</Label>
+                  <Label htmlFor={`name-${label.id}`}>{t("common.name")}</Label>
                   <Input
                     className="mt-1"
                     id={`name-${label.id}`}
@@ -49,7 +50,7 @@ export default async function LabelsPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor={`color-${label.id}`}>Cor</Label>
+                  <Label htmlFor={`color-${label.id}`}>{t("common.color")}</Label>
                   <select
                     id={`color-${label.id}`}
                     name="color"
@@ -64,7 +65,7 @@ export default async function LabelsPage() {
                   </select>
                 </div>
                 <Button type="submit" variant="secondary">
-                  Salvar
+                  {t("common.save")}
                 </Button>
               </form>
             </Card>
@@ -73,14 +74,14 @@ export default async function LabelsPage() {
       </section>
       <section>
         <Card className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900">Nova etiqueta</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t("labels.newLabel")}</h2>
           <form action={createLabelAction} className="space-y-4">
             <div>
-              <Label htmlFor="name">Nome</Label>
+              <Label htmlFor="name">{t("common.name")}</Label>
               <Input className="mt-1" id="name" name="name" required />
             </div>
             <div>
-              <Label htmlFor="color">Cor</Label>
+              <Label htmlFor="color">{t("common.color")}</Label>
               <select
                 id="color"
                 name="color"
@@ -94,7 +95,7 @@ export default async function LabelsPage() {
                 ))}
               </select>
             </div>
-            <Button type="submit">Adicionar</Button>
+            <Button type="submit">{t("common.add")}</Button>
           </form>
         </Card>
       </section>

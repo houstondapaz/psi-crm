@@ -3,8 +3,20 @@ import type { LeafPaths } from "./types";
 
 export type MessageKey = LeafPaths<typeof messagesPtBr>;
 
+export const WEEKDAY_MESSAGE_KEYS = [
+  "agenda.weekdayMon",
+  "agenda.weekdayTue",
+  "agenda.weekdayWed",
+  "agenda.weekdayThu",
+  "agenda.weekdayFri",
+  "agenda.weekdaySat",
+  "agenda.weekdaySun",
+] as const satisfies readonly MessageKey[];
+
 export { LOCALE } from "./locale";
-export { formatDate, formatDateTime } from "./format";
+export { formatDate, formatDateTime, formatSessionDateTime, formatTime, formatWeekdayShort } from "./format";
+
+type InterpolationValues = Record<string, string | number>;
 
 function resolvePath(path: string): string {
   const parts = path.split(".");
@@ -24,6 +36,18 @@ function resolvePath(path: string): string {
   return current;
 }
 
-export function t(key: MessageKey): string {
-  return resolvePath(key);
+export function t(key: MessageKey, values?: InterpolationValues): string {
+  let message = resolvePath(key);
+
+  if (values) {
+    for (const [name, value] of Object.entries(values)) {
+      message = message.replaceAll(`{${name}}`, String(value));
+    }
+  }
+
+  return message;
+}
+
+export function getWeekdayLabels(): string[] {
+  return WEEKDAY_MESSAGE_KEYS.map((key) => t(key));
 }

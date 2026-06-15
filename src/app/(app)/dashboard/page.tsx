@@ -1,6 +1,7 @@
 import { requireAuth } from "@/lib/auth/session";
 import { AgendaCalendar } from "@/components/agenda-calendar";
 import { PageHeader } from "@/components/ui/page-header";
+import { t } from "@/lib/i18n";
 import {
   getAgendaRange,
   getAgendaTitle,
@@ -24,8 +25,8 @@ export default async function AgendaPage({
   return (
     <main className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
       <PageHeader
-        title="Agenda"
-        description="Sessões agendadas e lembretes do consultório"
+        title={t("agenda.title")}
+        description={t("agenda.description")}
       />
       <AgendaCalendar
         events={events}

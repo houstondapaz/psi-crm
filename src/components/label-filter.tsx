@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LabelView } from "@/services/label-service";
 import { LabelChip } from "@/components/label-chip";
+import { t } from "@/lib/i18n";
 
 type LabelFilterProps = {
   catalog: LabelView[];
@@ -28,7 +29,7 @@ export function LabelFilter({ catalog, selectedIds, basePath }: LabelFilterProps
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-700">Filtrar por etiquetas</p>
+      <p className="text-sm font-medium text-gray-700">{t("labels.filterBy")}</p>
       <div className="flex flex-wrap items-center gap-2">
         {catalog.map((label) => {
           const active = selected.has(label.id);
@@ -47,12 +48,12 @@ export function LabelFilter({ catalog, selectedIds, basePath }: LabelFilterProps
             href={basePath}
             className="text-sm font-medium text-gray-600 transition hover:text-gray-900"
           >
-            Limpar filtro
+            {t("labels.clearFilter")}
           </Link>
         )}
       </div>
       {selectedIds.length > 1 && (
-        <p className="text-xs text-gray-500">Mostrando registros com todas as etiquetas selecionadas.</p>
+        <p className="text-xs text-gray-500">{t("labels.filterHint")}</p>
       )}
     </div>
   );

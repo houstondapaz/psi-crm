@@ -8,6 +8,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { t } from "@/lib/i18n";
 
 type AnnotationCardProps = {
   sessionId: string;
@@ -133,7 +134,7 @@ export function AnnotationCard({
           type="button"
           onClick={() => setEditingTime((value) => !value)}
           className="rounded-sm p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
-          aria-label={editingTime ? "Cancelar edição da data" : "Editar data"}
+          aria-label={editingTime ? t("sessions.cancelEditDate") : t("sessions.editDate")}
         >
           <PencilIcon />
         </button>
@@ -154,13 +155,13 @@ export function AnnotationCard({
             onClick={closeEditMode}
             className={`${actionButtonClass} border-gray-200 bg-white text-gray-700 hover:bg-gray-50`}
           >
-            Cancelar
+            {t("common.cancel")}
           </button>
           <button
             type="submit"
             className={`${actionButtonClass} border-gray-200 bg-white text-gray-700 hover:bg-gray-50`}
           >
-            Salvar
+            {t("common.save")}
             <CheckIcon />
           </button>
           <button
@@ -168,7 +169,7 @@ export function AnnotationCard({
             formAction={deleteAnnotationAction}
             className={`${actionButtonClass} border-red-200 bg-white text-red-700 hover:bg-red-50`}
           >
-            Excluir
+            {t("common.delete")}
             <TrashIcon />
           </button>
         </div>

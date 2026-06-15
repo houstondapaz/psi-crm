@@ -1,4 +1,5 @@
 import { db } from "@/prisma/db";
+import { t } from "@/lib/i18n";
 import type { AuthContext } from "./types";
 
 export type AlertItem = {
@@ -49,7 +50,7 @@ export async function listDueAlerts(
       id: item.id,
       patientId: item.patientId,
       patientName: item.patient.name,
-      title: item.description ?? "Retomar contato",
+      title: item.description ?? t("common.defaultReminder"),
       referenceDate: targetDate,
       status: targetDate <= today ? "overdue" : "upcoming",
     };
@@ -65,7 +66,7 @@ export async function listDueAlerts(
         id: item.id,
         patientId: item.patientId,
         patientName: item.patient.name,
-        title: "Sessão agendada",
+        title: t("common.scheduledSession"),
         referenceDate: scheduledDate,
         status: scheduledAt <= referenceDate ? "overdue" : "upcoming",
       };

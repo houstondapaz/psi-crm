@@ -1,3 +1,4 @@
+import { LOCALE } from "@/lib/i18n";
 import { db } from "@/prisma/db";
 import { isLabelColor, type LabelColor } from "@/lib/label-colors";
 import type { AuthContext } from "./types";
@@ -260,7 +261,7 @@ export async function listLabelsByPatient(
 
   return rows
     .map((row) => toLabelView(row.label))
-    .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+    .sort((a, b) => a.name.localeCompare(b.name, LOCALE));
 }
 
 export async function listLabelsBySession(
@@ -279,7 +280,7 @@ export async function listLabelsBySession(
 
   return rows
     .map((row) => toLabelView(row.label))
-    .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+    .sort((a, b) => a.name.localeCompare(b.name, LOCALE));
 }
 
 function matchesAllLabels(labelIds: string[], entityLabelIds: string[]) {
@@ -307,7 +308,7 @@ export async function listPatientLabelsMap(auth: AuthContext) {
   for (const [patientId, labels] of map) {
     map.set(
       patientId,
-      labels.sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
+      labels.sort((a, b) => a.name.localeCompare(b.name, LOCALE)),
     );
   }
 
@@ -334,7 +335,7 @@ export async function listSessionLabelsMap(auth: AuthContext) {
   for (const [sessionId, labels] of map) {
     map.set(
       sessionId,
-      labels.sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
+      labels.sort((a, b) => a.name.localeCompare(b.name, LOCALE)),
     );
   }
 

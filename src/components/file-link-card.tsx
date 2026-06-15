@@ -4,6 +4,7 @@ import {
 } from "@/app/actions/domain";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { t } from "@/lib/i18n";
 
 type FileLinkCardProps = {
   sessionId: string;
@@ -71,7 +72,7 @@ export function FileLinkCard({
           <button
             type="submit"
             className={iconButtonClass}
-            aria-label="Salvar link"
+            aria-label={t("sessions.saveLink")}
           >
             <CheckIcon />
           </button>
@@ -82,7 +83,7 @@ export function FileLinkCard({
           <button
             type="submit"
             className={`${iconButtonClass} hover:border-red-200 hover:bg-red-50 hover:text-red-700`}
-            aria-label="Excluir link"
+            aria-label={t("sessions.deleteLink")}
           >
             <TrashIcon />
           </button>

@@ -9,18 +9,13 @@ import { LabelFilter } from "@/components/label-filter";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { formatSessionDateTime, t } from "@/lib/i18n";
 
 function formatSessionDate(date: Date | null) {
   if (!date) {
-    return "Sem data";
+    return t("common.noDate");
   }
-  return date.toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatSessionDateTime(date);
 }
 
 export default async function SessionsPage({
@@ -45,8 +40,8 @@ export default async function SessionsPage({
   return (
     <main className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6">
       <PageHeader
-        title="Sessões"
-        description="Todas as sessões do consultório"
+        title={t("sessions.title")}
+        description={t("sessions.description")}
         action={
           <CreateSessionModal
             patients={patients.map((patient) => ({
@@ -59,7 +54,7 @@ export default async function SessionsPage({
       <LabelFilter catalog={catalog} selectedIds={labelIds} basePath="/sessions" />
       <div className="space-y-2">
         {sessions.length === 0 && (
-          <EmptyState message="Nenhuma sessão registrada." />
+          <EmptyState message={t("sessions.empty")} />
         )}
         {sessions.map((session) => (
           <Card key={session.id}>
@@ -85,7 +80,7 @@ export default async function SessionsPage({
                 href={`/sessions/${session.id}`}
                 className="inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
               >
-                Ver sessão
+                {t("common.viewSession")}
               </Link>
             </div>
           </Card>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { t } from "@/lib/i18n";
 
 type PatientOption = {
   id: string;
@@ -30,7 +31,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
   return (
     <>
       <Button type="button" onClick={openModal}>
-        Nova sessão
+        {t("sessions.newSession")}
       </Button>
 
       <dialog
@@ -40,14 +41,14 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
       >
         <form action={scheduleSessionAction} className="space-y-4 p-6">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Nova sessão</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t("sessions.newSession")}</h2>
             <p className="mt-1 text-sm text-gray-600">
-              Escolha o paciente e a data da sessão
+              {t("sessions.newSessionDescription")}
             </p>
           </div>
 
           <div>
-            <Label htmlFor="create-session-patient">Paciente</Label>
+            <Label htmlFor="create-session-patient">{t("sessions.patient")}</Label>
             <Select
               className="mt-1"
               id="create-session-patient"
@@ -56,7 +57,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
               defaultValue=""
             >
               <option value="" disabled>
-                Selecione um paciente...
+                {t("common.selectPatient")}
               </option>
               {patients.map((patient) => (
                 <option key={patient.id} value={patient.id}>
@@ -67,7 +68,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
           </div>
 
           <div>
-            <Label htmlFor="create-session-date">Data e hora</Label>
+            <Label htmlFor="create-session-date">{t("common.datetime")}</Label>
             <Input
               className="mt-1"
               id="create-session-date"
@@ -79,9 +80,9 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
 
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="secondary" type="button" onClick={closeModal}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
-            <Button type="submit">Criar sessão</Button>
+            <Button type="submit">{t("sessions.createSession")}</Button>
           </div>
         </form>
       </dialog>
