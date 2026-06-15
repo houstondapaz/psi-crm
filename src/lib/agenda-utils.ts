@@ -1,3 +1,5 @@
+import { LOCALE } from "@/lib/i18n";
+
 export type AgendaView = "month" | "week" | "day";
 
 export type AgendaEvent = {
@@ -79,13 +81,13 @@ export function getAgendaRange(view: AgendaView, anchor: Date) {
 }
 
 export function getAgendaTitle(view: AgendaView, anchor: Date) {
-  const formatter = new Intl.DateTimeFormat("pt-BR", {
+  const formatter = new Intl.DateTimeFormat(LOCALE, {
     month: "long",
     year: "numeric",
   });
 
   if (view === "day") {
-    return anchor.toLocaleDateString("pt-BR", {
+    return anchor.toLocaleDateString(LOCALE, {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -96,11 +98,11 @@ export function getAgendaTitle(view: AgendaView, anchor: Date) {
   if (view === "week") {
     const rangeStart = startOfWeek(anchor);
     const rangeEnd = endOfWeek(anchor);
-    const startLabel = rangeStart.toLocaleDateString("pt-BR", {
+    const startLabel = rangeStart.toLocaleDateString(LOCALE, {
       day: "numeric",
       month: "short",
     });
-    const endLabel = rangeEnd.toLocaleDateString("pt-BR", {
+    const endLabel = rangeEnd.toLocaleDateString(LOCALE, {
       day: "numeric",
       month: "short",
       year: "numeric",
