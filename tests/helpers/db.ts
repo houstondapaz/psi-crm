@@ -1,7 +1,6 @@
 import { db } from "@/prisma/db";
 
 const deleteOrder = [
-  db.orm.SentAlertEmail,
   db.orm.FileLink,
   db.orm.Referral,
   db.orm.SessionAnnotation,

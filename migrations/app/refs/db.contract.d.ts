@@ -31,9 +31,9 @@ import type {
 } from '@prisma-next/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'sha256:34bfc6c683aa9f88346a414378a288bc612feb63eeaa3b75985aa65e655cc867'>;
+  StorageHashBase<'sha256:6b50e39254a19592f2733ab5f90125a875bb373345d7410dac2218bf72575f10'>;
 export type ExecutionHash =
-  ExecutionHashBase<'sha256:f14d4bb0ed7166edd51677b54c17ea690413d2f6865bcc98733ec280c7db4a57'>;
+  ExecutionHashBase<'sha256:3d511e5f0e812a5999a540ee9a4ed36135f9a0f35428445576057ad448374e36'>;
 export type ProfileHash =
   ProfileHashBase<'sha256:9c8aa3114e84ed3b7ea2bd57526d9c2e1bf7c5292be694e9d3801f566fda7ccb'>;
 
@@ -112,14 +112,6 @@ export type FieldOutputTypes = {
     readonly status: CodecTypes['pg/text@1']['output'];
     readonly resolvedAt: CodecTypes['pg/timestamptz@1']['output'] | null;
     readonly createdAt: CodecTypes['pg/timestamptz@1']['output'];
-  };
-  readonly SentAlertEmail: {
-    readonly id: Char<36>;
-    readonly practiceId: CodecTypes['pg/text@1']['output'];
-    readonly userId: CodecTypes['pg/text@1']['output'];
-    readonly referenceType: CodecTypes['pg/text@1']['output'];
-    readonly referenceId: CodecTypes['pg/text@1']['output'];
-    readonly sentAt: CodecTypes['pg/timestamptz@1']['output'];
   };
   readonly Session: {
     readonly id: Char<36>;
@@ -219,14 +211,6 @@ export type FieldInputTypes = {
     readonly status: CodecTypes['pg/text@1']['input'];
     readonly resolvedAt: CodecTypes['pg/timestamptz@1']['input'] | null;
     readonly createdAt: CodecTypes['pg/timestamptz@1']['input'];
-  };
-  readonly SentAlertEmail: {
-    readonly id: CodecTypes['sql/char@1']['input'];
-    readonly practiceId: CodecTypes['pg/text@1']['input'];
-    readonly userId: CodecTypes['pg/text@1']['input'];
-    readonly referenceType: CodecTypes['pg/text@1']['input'];
-    readonly referenceId: CodecTypes['pg/text@1']['input'];
-    readonly sentAt: CodecTypes['pg/timestamptz@1']['input'];
   };
   readonly Session: {
     readonly id: CodecTypes['sql/char@1']['input'];
@@ -833,75 +817,6 @@ type ContractBase = Omit<
                     readonly target: {
                       readonly namespaceId: 'public' & NamespaceId;
                       readonly tableName: 'patient';
-                      readonly columns: readonly ['id'];
-                    };
-                    readonly constraint: true;
-                    readonly index: true;
-                  },
-                ];
-              };
-              readonly sentAlertEmail: {
-                columns: {
-                  readonly id: {
-                    readonly nativeType: 'character';
-                    readonly codecId: 'sql/char@1';
-                    readonly nullable: false;
-                    readonly typeParams: { readonly length: 36 };
-                  };
-                  readonly practiceId: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly userId: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly referenceType: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly referenceId: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly sentAt: {
-                    readonly nativeType: 'timestamptz';
-                    readonly codecId: 'pg/timestamptz@1';
-                    readonly nullable: false;
-                    readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  };
-                };
-                primaryKey: { readonly columns: readonly ['id'] };
-                uniques: readonly [];
-                indexes: readonly [];
-                foreignKeys: readonly [
-                  {
-                    readonly source: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'sentAlertEmail';
-                      readonly columns: readonly ['practiceId'];
-                    };
-                    readonly target: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'practice';
-                      readonly columns: readonly ['id'];
-                    };
-                    readonly constraint: true;
-                    readonly index: true;
-                  },
-                  {
-                    readonly source: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'sentAlertEmail';
-                      readonly columns: readonly ['userId'];
-                    };
-                    readonly target: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'user';
                       readonly columns: readonly ['id'];
                     };
                     readonly constraint: true;
@@ -1578,17 +1493,6 @@ type ContractBase = Omit<
               readonly targetFields: readonly ['practiceId'];
             };
           };
-          readonly sentAlertEmails: {
-            readonly to: {
-              readonly namespace: 'public' & NamespaceId;
-              readonly model: 'SentAlertEmail';
-            };
-            readonly cardinality: '1:N';
-            readonly on: {
-              readonly localFields: readonly ['id'];
-              readonly targetFields: readonly ['practiceId'];
-            };
-          };
           readonly sessionAnnotations: {
             readonly to: {
               readonly namespace: 'public' & NamespaceId;
@@ -1844,68 +1748,6 @@ type ContractBase = Omit<
           };
         };
       };
-      readonly SentAlertEmail: {
-        readonly fields: {
-          readonly id: {
-            readonly nullable: false;
-            readonly type: {
-              readonly kind: 'scalar';
-              readonly codecId: 'sql/char@1';
-              readonly typeParams: { readonly length: 36 };
-            };
-          };
-          readonly practiceId: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly userId: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly referenceType: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly referenceId: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly sentAt: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-          };
-        };
-        readonly relations: {
-          readonly practice: {
-            readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Practice' };
-            readonly cardinality: 'N:1';
-            readonly on: {
-              readonly localFields: readonly ['practiceId'];
-              readonly targetFields: readonly ['id'];
-            };
-          };
-          readonly user: {
-            readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-            readonly cardinality: 'N:1';
-            readonly on: {
-              readonly localFields: readonly ['userId'];
-              readonly targetFields: readonly ['id'];
-            };
-          };
-        };
-        readonly storage: {
-          readonly table: 'sentAlertEmail';
-          readonly namespaceId: 'public';
-          readonly fields: {
-            readonly id: { readonly column: 'id' };
-            readonly practiceId: { readonly column: 'practiceId' };
-            readonly userId: { readonly column: 'userId' };
-            readonly referenceType: { readonly column: 'referenceType' };
-            readonly referenceId: { readonly column: 'referenceId' };
-            readonly sentAt: { readonly column: 'sentAt' };
-          };
-        };
-      };
       readonly Session: {
         readonly fields: {
           readonly id: {
@@ -2151,17 +1993,6 @@ type ContractBase = Omit<
               readonly targetFields: readonly ['id'];
             };
           };
-          readonly sentAlertEmails: {
-            readonly to: {
-              readonly namespace: 'public' & NamespaceId;
-              readonly model: 'SentAlertEmail';
-            };
-            readonly cardinality: '1:N';
-            readonly on: {
-              readonly localFields: readonly ['id'];
-              readonly targetFields: readonly ['userId'];
-            };
-          };
         };
         readonly storage: {
           readonly table: 'user';
@@ -2205,10 +2036,6 @@ type ContractBase = Omit<
     };
     readonly referral: { readonly namespace: 'public' & NamespaceId; readonly model: 'Referral' };
     readonly fileLink: { readonly namespace: 'public' & NamespaceId; readonly model: 'FileLink' };
-    readonly sentAlertEmail: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'SentAlertEmail';
-    };
   };
   readonly domain: {
     readonly namespaces: {
@@ -2682,17 +2509,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['practiceId'];
                 };
               };
-              readonly sentAlertEmails: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SentAlertEmail';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['practiceId'];
-                };
-              };
               readonly sessionAnnotations: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2975,71 +2791,6 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly SentAlertEmail: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly practiceId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly userId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly referenceType: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly referenceId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly sentAt: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-              };
-            };
-            readonly relations: {
-              readonly practice: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Practice';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['practiceId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly user: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'sentAlertEmail';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly practiceId: { readonly column: 'practiceId' };
-                readonly userId: { readonly column: 'userId' };
-                readonly referenceType: { readonly column: 'referenceType' };
-                readonly referenceId: { readonly column: 'referenceId' };
-                readonly sentAt: { readonly column: 'sentAt' };
-              };
-            };
-          };
           readonly Session: {
             readonly fields: {
               readonly id: {
@@ -3312,17 +3063,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly sentAlertEmails: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SentAlertEmail';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
             };
             readonly storage: {
               readonly table: 'user';
@@ -3392,10 +3132,6 @@ type ContractBase = Omit<
         },
         {
           readonly ref: { readonly table: 'reminder'; readonly column: 'id' };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
-        },
-        {
-          readonly ref: { readonly table: 'sentAlertEmail'; readonly column: 'id' };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {

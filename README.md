@@ -40,14 +40,6 @@ O Postgres local usa a porta **5433** (ver `docker-compose.yml`).
 npm test
 ```
 
-## Cron de alertas por e-mail
-
-```bash
-curl -H "Authorization: Bearer dev-cron-secret" http://localhost:3000/api/cron/alertas
-```
-
-Configure `CRON_SECRET`, `RESEND_API_KEY` e `EMAIL_FROM` no `.env`.
-
 ## Domínio vs código
 
 O glossário de negócio está em [CONTEXT.md](./CONTEXT.md) (português). Identificadores de código (models, services, rotas) estão em inglês — ver [docs/adr/0001-prisma-next-english-schema.md](./docs/adr/0001-prisma-next-english-schema.md).

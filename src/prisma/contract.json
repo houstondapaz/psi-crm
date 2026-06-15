@@ -40,10 +40,6 @@
       "model": "Reminder",
       "namespace": "public"
     },
-    "sentAlertEmail": {
-      "model": "SentAlertEmail",
-      "namespace": "public"
-    },
     "session": {
       "model": "Session",
       "namespace": "public"
@@ -755,21 +751,6 @@
                   "namespace": "public"
                 }
               },
-              "sentAlertEmails": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "practiceId"
-                  ]
-                },
-                "to": {
-                  "model": "SentAlertEmail",
-                  "namespace": "public"
-                }
-              },
               "sessionAnnotations": {
                 "cardinality": "1:N",
                 "on": {
@@ -1207,111 +1188,6 @@
               "table": "reminder"
             }
           },
-          "SentAlertEmail": {
-            "fields": {
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "sql/char@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 36
-                  }
-                }
-              },
-              "practiceId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "referenceId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "referenceType": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "sentAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz@1",
-                  "kind": "scalar"
-                }
-              },
-              "userId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              }
-            },
-            "relations": {
-              "practice": {
-                "cardinality": "N:1",
-                "on": {
-                  "localFields": [
-                    "practiceId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "Practice",
-                  "namespace": "public"
-                }
-              },
-              "user": {
-                "cardinality": "N:1",
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
-            "storage": {
-              "fields": {
-                "id": {
-                  "column": "id"
-                },
-                "practiceId": {
-                  "column": "practiceId"
-                },
-                "referenceId": {
-                  "column": "referenceId"
-                },
-                "referenceType": {
-                  "column": "referenceType"
-                },
-                "sentAt": {
-                  "column": "sentAt"
-                },
-                "userId": {
-                  "column": "userId"
-                }
-              },
-              "namespaceId": "public",
-              "table": "sentAlertEmail"
-            }
-          },
           "Session": {
             "fields": {
               "createdAt": {
@@ -1715,21 +1591,6 @@
                 },
                 "to": {
                   "model": "Practice",
-                  "namespace": "public"
-                }
-              },
-              "sentAlertEmails": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "SentAlertEmail",
                   "namespace": "public"
                 }
               }
@@ -2498,94 +2359,6 @@
               },
               "uniques": []
             },
-            "sentAlertEmail": {
-              "columns": {
-                "id": {
-                  "codecId": "sql/char@1",
-                  "nativeType": "character",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 36
-                  }
-                },
-                "practiceId": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "referenceId": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "referenceType": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "sentAt": {
-                  "codecId": "pg/timestamptz@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                },
-                "userId": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "constraint": true,
-                  "index": true,
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "practiceId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "sentAlertEmail"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "practice"
-                  }
-                },
-                {
-                  "constraint": true,
-                  "index": true,
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "userId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "sentAlertEmail"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "user"
-                  }
-                }
-              ],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
             "session": {
               "columns": {
                 "createdAt": {
@@ -2918,10 +2691,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "sha256:34bfc6c683aa9f88346a414378a288bc612feb63eeaa3b75985aa65e655cc867"
+    "storageHash": "sha256:6b50e39254a19592f2733ab5f90125a875bb373345d7410dac2218bf72575f10"
   },
   "execution": {
-    "executionHash": "sha256:f14d4bb0ed7166edd51677b54c17ea690413d2f6865bcc98733ec280c7db4a57",
+    "executionHash": "sha256:3d511e5f0e812a5999a540ee9a4ed36135f9a0f35428445576057ad448374e36",
     "mutations": {
       "defaults": [
         {
@@ -3002,16 +2775,6 @@
           "ref": {
             "column": "id",
             "table": "reminder"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "uuidv4",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "table": "sentAlertEmail"
           }
         },
         {
