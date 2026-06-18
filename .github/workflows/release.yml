@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: crm
+          POSTGRES_PASSWORD: crm
+          POSTGRES_DB: crm_psi
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      IMAGE: ghcr.io/${{ github.repository }}
+      IMAGE_TAG: ${{ github.ref_name }}
+      DATABASE_URL: postgresql://crm:crm@localhost:5432/crm_psi
+      AUTH_SECRET: ci-test-secret
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Initialize database
+        run: npm run db:init
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build app
+        run: npm run build
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        run: |
+          docker build -t "$IMAGE:$IMAGE_TAG" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$IMAGE_TAG"
+          docker push "$IMAGE:latest"
