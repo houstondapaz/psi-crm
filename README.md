@@ -6,7 +6,7 @@ CRM SaaS multi-tenant para psicólogos gerenciarem pacientes, sessões, contatos
 
 - Next.js 15 (App Router)
 - Prisma Next (`@prisma-next/postgres`)
-- PostgreSQL
+- PostgreSQL 17+
 - NextAuth (credentials)
 - Vitest (testes de integração)
 
@@ -39,6 +39,10 @@ O Postgres local usa a porta **5433** (ver `docker-compose.yml`).
 ```bash
 npm test
 ```
+
+## Deploy
+
+O runbook de deploy AWS + Vault está em [docs/deployment/aws-vault.md](./docs/deployment/aws-vault.md).
 
 ## Domínio vs código
 

@@ -42,6 +42,15 @@ export default function RegisterPage() {
               required
             />
           </div>
+          <div>
+            <Label htmlFor="registrationToken">{t("register.registrationToken")}</Label>
+            <Input
+              className="mt-1"
+              id="registrationToken"
+              name="registrationToken"
+              type="password"
+            />
+          </div>
           <Button className="w-full" type="submit">
             {t("register.submit")}
           </Button>

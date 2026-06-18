@@ -37,6 +37,7 @@ export const messagesPtBr = {
     subtitle: "Crie sua conta e comece a usar",
     practiceName: "Nome do consultório",
     userName: "Seu nome",
+    registrationToken: "Token de cadastro",
     submit: "Criar conta",
     hasAccount: "Já tem conta?",
     loginLink: "Entrar",

@@ -7,9 +7,12 @@ export type RegisterPracticeInput = {
   userName: string;
   email: string;
   password: string;
+  registrationToken?: string;
 };
 
 export async function registerPractice(input: RegisterPracticeInput) {
+  requireValidRegistrationToken(input.registrationToken);
+
   const passwordHash = await bcrypt.hash(input.password, 10);
   const practiceId = asEntityId(crypto.randomUUID());
   const userId = asEntityId(crypto.randomUUID());
@@ -39,6 +42,17 @@ export async function registerPractice(input: RegisterPracticeInput) {
       email: user.email,
     },
   };
+}
+
+function requireValidRegistrationToken(registrationToken: string | undefined) {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  const expectedToken = process.env.REGISTRATION_TOKEN;
+  if (!expectedToken || registrationToken !== expectedToken) {
+    throw new Error("Invalid registration token");
+  }
 }
 
 export async function authenticateUser(email: string, password: string) {

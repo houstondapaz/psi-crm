@@ -2,6 +2,7 @@ name: Tests
 
 on:
   push:
+  pull_request:
 
 jobs:
   test:
@@ -9,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres:17-alpine
         env:
           POSTGRES_USER: crm
           POSTGRES_PASSWORD: crm
@@ -44,3 +45,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Build application
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t crm-psi:test .

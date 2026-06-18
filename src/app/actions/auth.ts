@@ -9,12 +9,14 @@ export async function registerAction(formData: FormData) {
   const userName = String(formData.get("userName") ?? "");
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
+  const registrationToken = String(formData.get("registrationToken") ?? "");
 
   await registerPractice({
     practiceName,
     userName,
     email,
     password,
+    registrationToken,
   });
 
   try {
