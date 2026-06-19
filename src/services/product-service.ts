@@ -1,3 +1,4 @@
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
@@ -38,7 +39,7 @@ export async function createReferral(auth: AuthContext, input: CreateReferralInp
     .first();
 
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   const product = await db.orm.Product
@@ -47,7 +48,7 @@ export async function createReferral(auth: AuthContext, input: CreateReferralInp
     .first();
 
   if (!product) {
-    throw new Error("Product not found");
+    throw new AppError("errors.productNotFound");
   }
 
   return db.orm.Referral.create({
@@ -69,7 +70,7 @@ export async function deleteReferral(auth: AuthContext, referralId: string) {
     .delete();
 
   if (!deleted) {
-    throw new Error("Referral not found");
+    throw new AppError("errors.referralNotFound");
   }
 }
 
@@ -80,7 +81,7 @@ export async function markReferralSold(auth: AuthContext, referralId: string) {
     .update({ sold: true, soldAt: new Date() });
 
   if (!referral) {
-    throw new Error("Referral not found");
+    throw new AppError("errors.referralNotFound");
   }
 
   return referral;

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { loginAction } from "@/app/actions/auth";
+import { ActionForm } from "@/components/action-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ export default function LoginPage() {
         <p className="mt-1 text-sm text-gray-600">{t("login.subtitle")}</p>
       </div>
       <Card>
-        <form action={loginAction} className="space-y-4">
+        <ActionForm action={loginAction} className="space-y-4">
           <div>
             <Label htmlFor="email">{t("common.email")}</Label>
             <Input className="mt-1" id="email" name="email" type="email" required />
@@ -32,7 +33,7 @@ export default function LoginPage() {
           <Button className="w-full" type="submit">
             {t("login.submit")}
           </Button>
-        </form>
+        </ActionForm>
       </Card>
       <p className="text-center text-sm text-gray-600 sm:text-left">
         {t("login.noAccount")}{" "}

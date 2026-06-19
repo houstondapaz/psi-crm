@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import {
   deleteAnnotationAction,
   updateAnnotationAction,
 } from "@/app/actions/domain";
+import { initialActionState } from "@/lib/action-state";
 import { Card } from "@/components/ui/card";
+import { FormError } from "@/components/ui/form-error";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { t } from "@/lib/i18n";
@@ -81,6 +83,9 @@ export function AnnotationCard({
   const [editing, setEditing] = useState(false);
   const [editingTime, setEditingTime] = useState(false);
   const formId = `annotation-form-${annotationId}`;
+  const [updateState, updateFormAction] = useActionState(updateAnnotationAction, initialActionState);
+  const [deleteState, deleteFormAction] = useActionState(deleteAnnotationAction, initialActionState);
+  const error = updateState.error ?? deleteState.error;
 
   function closeEditMode() {
     setEditing(false);
@@ -139,7 +144,8 @@ export function AnnotationCard({
           <PencilIcon />
         </button>
       </div>
-      <form id={formId} action={updateAnnotationAction} className="space-y-3">
+      <form id={formId} action={updateFormAction} className="space-y-3">
+        <FormError message={error} />
         <input type="hidden" name="sessionId" value={sessionId} />
         <input type="hidden" name="annotationId" value={annotationId} />
         <Textarea
@@ -166,7 +172,8 @@ export function AnnotationCard({
           </button>
           <button
             type="submit"
-            formAction={deleteAnnotationAction}
+            form={formId}
+            formAction={deleteFormAction}
             className={`${actionButtonClass} border-red-200 bg-white text-red-700 hover:bg-red-50`}
           >
             {t("common.delete")}

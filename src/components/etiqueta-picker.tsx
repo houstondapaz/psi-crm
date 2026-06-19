@@ -2,9 +2,11 @@
 
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import type { ActionState } from "@/lib/action-state";
 import { LABEL_COLORS, LABEL_COLOR_CLASSES, type LabelColor } from "@/lib/label-colors";
 import { LOCALE, t } from "@/lib/i18n";
 import { LabelChip } from "@/components/label-chip";
+import { FormError } from "@/components/ui/form-error";
 
 export type EtiquetaOption = {
   id: string;
@@ -15,9 +17,9 @@ export type EtiquetaOption = {
 type EtiquetaPickerProps = {
   attached: EtiquetaOption[];
   catalog: EtiquetaOption[];
-  attachAction: (formData: FormData) => Promise<void>;
-  detachAction: (formData: FormData) => Promise<void>;
-  createAndAttachAction: (formData: FormData) => Promise<void>;
+  attachAction: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
+  detachAction: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
+  createAndAttachAction: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
   hiddenFields: Record<string, string>;
 };
 
@@ -55,6 +57,7 @@ export function EtiquetaPicker({
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [createColor, setCreateColor] = useState<LabelColor>("blue");
+  const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
 
   const attachedIds = new Set(attached.map((label) => label.id));
@@ -92,9 +95,18 @@ export function EtiquetaPicker({
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
 
-  function runAction(action: (formData: FormData) => Promise<void>, fields: Record<string, string>) {
+  function runAction(
+    action: (prevState: ActionState, formData: FormData) => Promise<ActionState>,
+    fields: Record<string, string>,
+  ) {
     startTransition(async () => {
-      await action(buildFormData(hiddenFields, fields));
+      const result = await action({}, buildFormData(hiddenFields, fields));
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      setError(undefined);
       setQuery("");
       setOpen(false);
       router.refresh();
@@ -173,6 +185,7 @@ export function EtiquetaPicker({
 
   return (
     <div ref={containerRef} className="relative">
+      <FormError message={error} />
       <div
         className={`flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5 shadow-sm focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 ${
           isPending ? "opacity-70" : ""

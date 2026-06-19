@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createPatientAction } from "@/app/actions/domain";
+import { ActionForm } from "@/components/action-form";
 import { requireAuth } from "@/lib/auth/session";
 import { listPatients } from "@/services/patient-service";
 import { listLabels } from "@/services/label-service";
@@ -69,7 +70,7 @@ export default async function PatientsPage({
       <section>
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("patients.newPatient")}</h2>
-          <form action={createPatientAction} className="space-y-4">
+          <ActionForm action={createPatientAction} className="space-y-4">
             <div>
               <Label htmlFor="name">{t("common.name")}</Label>
               <Input className="mt-1" id="name" name="name" required />
@@ -83,7 +84,7 @@ export default async function PatientsPage({
               <Input className="mt-1" id="phone" name="phone" />
             </div>
             <Button type="submit">{t("common.register")}</Button>
-          </form>
+          </ActionForm>
         </Card>
       </section>
     </main>

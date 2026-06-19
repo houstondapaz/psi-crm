@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import { asEntityId } from "./types";
 
@@ -51,7 +52,7 @@ function requireValidRegistrationToken(registrationToken: string | undefined) {
 
   const expectedToken = process.env.REGISTRATION_TOKEN;
   if (!expectedToken || registrationToken !== expectedToken) {
-    throw new Error("Invalid registration token");
+    throw new AppError("errors.invalidRegistrationToken");
   }
 }
 

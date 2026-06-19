@@ -1,4 +1,5 @@
 import { LOCALE } from "@/lib/i18n";
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import { isLabelColor, type LabelColor } from "@/lib/label-colors";
 import type { AuthContext } from "./types";
@@ -23,7 +24,7 @@ export type UpdateLabelInput = {
 
 function assertLabelColor(color: string): LabelColor {
   if (!isLabelColor(color)) {
-    throw new Error("Invalid label color");
+    throw new AppError("errors.invalidLabelColor");
   }
   return color;
 }
@@ -57,7 +58,7 @@ async function getSessionForPractice(auth: AuthContext, sessionId: string) {
 export async function createLabel(auth: AuthContext, input: CreateLabelInput) {
   const name = input.name.trim();
   if (!name) {
-    throw new Error("Label name is required");
+    throw new AppError("errors.labelNameRequired");
   }
 
   const color = assertLabelColor(input.color);
@@ -68,7 +69,7 @@ export async function createLabel(auth: AuthContext, input: CreateLabelInput) {
     .first();
 
   if (existing) {
-    throw new Error("Label name already exists");
+    throw new AppError("errors.labelNameExists");
   }
 
   return db.orm.Label.create({
@@ -96,12 +97,12 @@ export async function updateLabel(
 ) {
   const existing = await getLabelForPractice(auth, labelId);
   if (!existing) {
-    throw new Error("Label not found");
+    throw new AppError("errors.labelNotFound");
   }
 
   const name = input.name !== undefined ? input.name.trim() : existing.name;
   if (!name) {
-    throw new Error("Label name is required");
+    throw new AppError("errors.labelNameRequired");
   }
 
   if (name !== existing.name) {
@@ -111,7 +112,7 @@ export async function updateLabel(
       .first();
 
     if (duplicate) {
-      throw new Error("Label name already exists");
+      throw new AppError("errors.labelNameExists");
     }
   }
 
@@ -124,7 +125,7 @@ export async function updateLabel(
     .update({ name, color });
 
   if (!updated) {
-    throw new Error("Label not found");
+    throw new AppError("errors.labelNotFound");
   }
 
   return updated;
@@ -137,7 +138,7 @@ export async function deleteLabel(auth: AuthContext, labelId: string) {
     .delete();
 
   if (!deleted) {
-    throw new Error("Label not found");
+    throw new AppError("errors.labelNotFound");
   }
 }
 
@@ -152,10 +153,10 @@ export async function attachLabelToPatient(
   ]);
 
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
   if (!label) {
-    throw new Error("Label not found");
+    throw new AppError("errors.labelNotFound");
   }
 
   const existing = await db.orm.PatientLabel
@@ -180,7 +181,7 @@ export async function detachLabelFromPatient(
 ) {
   const patient = await getPatientById(auth, patientId);
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
 
   const deleted = await db.orm.PatientLabel
@@ -189,7 +190,7 @@ export async function detachLabelFromPatient(
     .delete();
 
   if (!deleted) {
-    throw new Error("Label not attached to patient");
+    throw new AppError("errors.labelNotAttachedToPatient");
   }
 }
 
@@ -204,10 +205,10 @@ export async function attachLabelToSession(
   ]);
 
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
   if (!label) {
-    throw new Error("Label not found");
+    throw new AppError("errors.labelNotFound");
   }
 
   const existing = await db.orm.SessionLabel
@@ -232,7 +233,7 @@ export async function detachLabelFromSession(
 ) {
   const session = await getSessionForPractice(auth, sessionId);
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   const deleted = await db.orm.SessionLabel
@@ -241,7 +242,7 @@ export async function detachLabelFromSession(
     .delete();
 
   if (!deleted) {
-    throw new Error("Label not attached to session");
+    throw new AppError("errors.labelNotAttachedToSession");
   }
 }
 
@@ -251,7 +252,7 @@ export async function listLabelsByPatient(
 ): Promise<LabelView[]> {
   const patient = await getPatientById(auth, patientId);
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
 
   const rows = await db.orm.PatientLabel
@@ -270,7 +271,7 @@ export async function listLabelsBySession(
 ): Promise<LabelView[]> {
   const session = await getSessionForPractice(auth, sessionId);
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   const rows = await db.orm.SessionLabel

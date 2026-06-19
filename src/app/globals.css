@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
-body {
-  font-family: system-ui, sans-serif;
-}
+@layer base {
+  body {
+    font-family: system-ui, sans-serif;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-input,
-textarea,
-select,
-button {
-  font: inherit;
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
 }

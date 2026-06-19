@@ -1,8 +1,13 @@
+"use client";
+
+import { useActionState } from "react";
 import {
   deleteFileLinkAction,
   updateFileLinkAction,
 } from "@/app/actions/domain";
+import { initialActionState } from "@/lib/action-state";
 import { Card } from "@/components/ui/card";
+import { FormError } from "@/components/ui/form-error";
 import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
 
@@ -58,13 +63,24 @@ export function FileLinkCard({
   label,
   url,
 }: FileLinkCardProps) {
+  const [updateState, updateFormAction] = useActionState(
+    updateFileLinkAction,
+    initialActionState,
+  );
+  const [deleteState, deleteFormAction] = useActionState(
+    deleteFileLinkAction,
+    initialActionState,
+  );
+  const error = updateState.error ?? deleteState.error;
+
   return (
     <Card>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <form
-          action={updateFileLinkAction}
+          action={updateFormAction}
           className="grid flex-1 gap-3 sm:grid-cols-[1fr_2fr_auto]"
         >
+          <FormError message={error} />
           <input type="hidden" name="sessionId" value={sessionId} />
           <input type="hidden" name="fileLinkId" value={fileLinkId} />
           <Input name="label" defaultValue={label} required />
@@ -77,7 +93,7 @@ export function FileLinkCard({
             <CheckIcon />
           </button>
         </form>
-        <form action={deleteFileLinkAction}>
+        <form action={deleteFormAction}>
           <input type="hidden" name="sessionId" value={sessionId} />
           <input type="hidden" name="fileLinkId" value={fileLinkId} />
           <button

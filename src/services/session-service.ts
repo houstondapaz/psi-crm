@@ -1,3 +1,4 @@
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import type { LabelView } from "@/services/label-service";
 import {
@@ -61,7 +62,7 @@ async function getSessionForPractice(auth: AuthContext, sessionId: string) {
 export async function createSession(auth: AuthContext, input: CreateSessionInput) {
   const patient = await getPatientById(auth, input.patientId);
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
 
   const now = new Date();
@@ -79,7 +80,7 @@ export async function createSession(auth: AuthContext, input: CreateSessionInput
 export async function scheduleSession(auth: AuthContext, input: ScheduleSessionInput) {
   const patient = await getPatientById(auth, input.patientId);
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
 
   const now = new Date();
@@ -172,7 +173,7 @@ export async function updateSession(
 ) {
   const existing = await getSessionForPractice(auth, sessionId);
   if (!existing) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   const updated = await db.orm.Session
@@ -185,7 +186,7 @@ export async function updateSession(
     });
 
   if (!updated) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   return updated;
@@ -198,7 +199,7 @@ export async function addFileLink(
 ) {
   const session = await getSessionForPractice(auth, sessionId);
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   return db.orm.FileLink.create({
@@ -232,7 +233,7 @@ export async function updateFileLink(
     });
 
   if (!updated) {
-    throw new Error("File link not found");
+    throw new AppError("errors.fileLinkNotFound");
   }
 
   return updated;
@@ -245,6 +246,6 @@ export async function deleteFileLink(auth: AuthContext, fileLinkId: string) {
     .delete();
 
   if (!deleted) {
-    throw new Error("File link not found");
+    throw new AppError("errors.fileLinkNotFound");
   }
 }

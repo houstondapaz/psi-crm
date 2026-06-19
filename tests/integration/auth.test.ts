@@ -53,7 +53,7 @@ describe("registerPractice", () => {
         email: "ana@example.com",
         password: "senha-segura",
       }),
-    ).rejects.toThrow("Invalid registration token");
+    ).rejects.toThrow("errors.invalidRegistrationToken");
 
     const result = await registerPractice({
       practiceName: "Consultório Esperança",

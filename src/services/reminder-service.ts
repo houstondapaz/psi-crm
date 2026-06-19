@@ -1,3 +1,4 @@
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
@@ -19,7 +20,7 @@ export type ResolveReminderAsContactInput = {
 export async function createReminder(auth: AuthContext, input: CreateReminderInput) {
   const patient = await getPatientById(auth, input.patientId);
   if (!patient) {
-    throw new Error("Patient not found");
+    throw new AppError("errors.patientNotFound");
   }
 
   const now = new Date();
@@ -45,7 +46,7 @@ export async function resolveReminderAsContact(
     .first();
 
   if (!reminder) {
-    throw new Error("Reminder not found");
+    throw new AppError("errors.reminderNotFound");
   }
 
   const now = input.occurredAt ?? new Date();

@@ -56,7 +56,7 @@ describe("LabelService", () => {
     await createLabel(auth, { name: "TCC", color: "blue" });
 
     await expect(createLabel(auth, { name: "TCC", color: "green" })).rejects.toThrow(
-      "Label name already exists",
+      "errors.labelNameExists",
     );
   });
 

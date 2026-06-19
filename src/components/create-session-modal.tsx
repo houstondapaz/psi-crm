@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { scheduleSessionAction } from "@/app/actions/domain";
+import { ActionForm } from "@/components/action-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,7 +40,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
         className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-0 shadow-xl backdrop:bg-black/40"
         onClose={closeModal}
       >
-        <form action={scheduleSessionAction} className="space-y-4 p-6">
+        <ActionForm action={scheduleSessionAction} className="space-y-4 p-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">{t("sessions.newSession")}</h2>
             <p className="mt-1 text-sm text-gray-600">
@@ -84,7 +85,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
             </Button>
             <Button type="submit">{t("sessions.createSession")}</Button>
           </div>
-        </form>
+        </ActionForm>
       </dialog>
     </>
   );

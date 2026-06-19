@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { registerAction } from "@/app/actions/auth";
+import { ActionForm } from "@/components/action-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ export default function RegisterPage() {
         <p className="mt-1 text-sm text-gray-600">{t("register.subtitle")}</p>
       </div>
       <Card>
-        <form action={registerAction} className="space-y-4">
+        <ActionForm action={registerAction} className="space-y-4">
           <div>
             <Label htmlFor="practiceName">{t("register.practiceName")}</Label>
             <Input
@@ -54,7 +55,7 @@ export default function RegisterPage() {
           <Button className="w-full" type="submit">
             {t("register.submit")}
           </Button>
-        </form>
+        </ActionForm>
       </Card>
       <p className="text-center text-sm text-gray-600 sm:text-left">
         {t("register.hasAccount")}{" "}

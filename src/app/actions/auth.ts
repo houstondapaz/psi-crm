@@ -1,39 +1,48 @@
 "use server";
 
+import { unstable_rethrow } from "next/navigation";
 import { signIn } from "@/lib/auth";
 import { registerPractice } from "@/services/auth-service";
+import type { ActionState } from "@/lib/action-state";
+import { toUserMessage, AppError } from "@/lib/errors";
 import { AuthError } from "next-auth";
 
-export async function registerAction(formData: FormData) {
+export async function registerAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const practiceName = String(formData.get("practiceName") ?? "");
   const userName = String(formData.get("userName") ?? "");
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const registrationToken = String(formData.get("registrationToken") ?? "");
 
-  await registerPractice({
-    practiceName,
-    userName,
-    email,
-    password,
-    registrationToken,
-  });
-
   try {
+    await registerPractice({
+      practiceName,
+      userName,
+      email,
+      password,
+      registrationToken,
+    });
+
     await signIn("credentials", {
       email,
       password,
       redirectTo: "/dashboard",
     });
   } catch (error) {
-    if (error instanceof AuthError) {
-      throw error;
-    }
-    throw error;
+    unstable_rethrow(error);
+    return { error: toUserMessage(error) };
   }
+
+  return {};
 }
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -45,9 +54,11 @@ export async function loginAction(formData: FormData) {
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      const { redirect } = await import("next/navigation");
-      redirect("/login?error=invalid");
+      return { error: toUserMessage(new AppError("errors.invalidCredentials")) };
     }
-    throw error;
+    unstable_rethrow(error);
+    return { error: toUserMessage(error) };
   }
+
+  return {};
 }

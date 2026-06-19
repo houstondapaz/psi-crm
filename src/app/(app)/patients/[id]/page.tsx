@@ -15,6 +15,7 @@ import { listContactsByPatient, listRemindersByPatient } from "@/services/remind
 import { listSessionsByPatient } from "@/services/session-service";
 import { listLabels, listLabelsByPatient } from "@/services/label-service";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
+import { ActionForm } from "@/components/action-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -82,15 +83,15 @@ export default async function PatientDetailPage({
       <section className="grid gap-6 lg:grid-cols-2">
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("patients.newSession")}</h2>
-          <form action={createSessionAction}>
+          <ActionForm action={createSessionAction}>
             <input type="hidden" name="patientId" value={id} />
             <Button type="submit">{t("patients.registerSession")}</Button>
-          </form>
+          </ActionForm>
         </Card>
 
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("patients.scheduleSession")}</h2>
-          <form action={scheduleSessionAction} className="space-y-4">
+          <ActionForm action={scheduleSessionAction} className="space-y-4">
             <input type="hidden" name="patientId" value={id} />
             <div>
               <Label htmlFor="scheduledAt">{t("common.datetime")}</Label>
@@ -103,12 +104,12 @@ export default async function PatientDetailPage({
               />
             </div>
             <Button type="submit">{t("patients.schedule")}</Button>
-          </form>
+          </ActionForm>
         </Card>
 
         <Card className="space-y-4 lg:col-span-2">
           <h2 className="text-lg font-medium text-gray-900">{t("patients.newReminder")}</h2>
-          <form action={createReminderAction} className="grid gap-4 sm:grid-cols-2">
+          <ActionForm action={createReminderAction} className="grid gap-4 sm:grid-cols-2">
             <input type="hidden" name="patientId" value={id} />
             <div>
               <Label htmlFor="targetDate">{t("common.targetDate")}</Label>
@@ -132,7 +133,7 @@ export default async function PatientDetailPage({
             <div className="sm:col-span-2">
               <Button type="submit">{t("patients.createReminder")}</Button>
             </div>
-          </form>
+          </ActionForm>
         </Card>
       </section>
 
@@ -172,14 +173,14 @@ export default async function PatientDetailPage({
                 {reminder.status}
               </p>
               {reminder.status === "pending" && (
-                <form action={resolveReminderAction} className="mt-3">
+                <ActionForm action={resolveReminderAction} className="mt-3">
                   <input type="hidden" name="patientId" value={id} />
                   <input type="hidden" name="reminderId" value={reminder.id} />
                   <input type="hidden" name="type" value="whatsapp" />
                   <Button variant="secondary" type="submit">
                     {t("patients.registerContact")}
                   </Button>
-                </form>
+                </ActionForm>
               )}
             </Card>
           ))}

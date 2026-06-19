@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AnnotationCard } from "@/components/annotation-card";
+import { ActionForm } from "@/components/action-form";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { FileLinkCard } from "@/components/file-link-card";
 import { formatSessionDateTime, t } from "@/lib/i18n";
@@ -92,7 +93,7 @@ export default async function SessionDetailPage({
             ))}
             <Card className="space-y-4">
               <h3 className="font-medium text-gray-900">{t("sessions.newAnnotation")}</h3>
-              <form action={createAnnotationAction} className="space-y-3">
+              <ActionForm action={createAnnotationAction} className="space-y-3">
                 <input type="hidden" name="sessionId" value={session.id} />
                 <Textarea
                   name="content"
@@ -101,7 +102,7 @@ export default async function SessionDetailPage({
                   required
                 />
                 <Button type="submit">{t("sessions.addAnnotation")}</Button>
-              </form>
+              </ActionForm>
             </Card>
           </section>
 
@@ -118,12 +119,12 @@ export default async function SessionDetailPage({
             ))}
             <Card className="space-y-4">
               <h3 className="font-medium text-gray-900">{t("sessions.addLink")}</h3>
-              <form action={addFileLinkAction} className="space-y-3">
+              <ActionForm action={addFileLinkAction} className="space-y-3">
                 <input type="hidden" name="sessionId" value={session.id} />
                 <Input name="label" placeholder={t("sessions.linkLabel")} required />
                 <Input name="url" placeholder={t("sessions.linkUrl")} required />
                 <Button type="submit">{t("sessions.addLink")}</Button>
-              </form>
+              </ActionForm>
             </Card>
           </section>
 
@@ -139,7 +140,7 @@ export default async function SessionDetailPage({
                     <Badge variant="success">{t("sessions.sold")}</Badge>
                   ) : (
                     <>
-                      <form action={markSoldAction}>
+                      <ActionForm action={markSoldAction}>
                         <input type="hidden" name="sessionId" value={session.id} />
                         <input
                           type="hidden"
@@ -149,8 +150,8 @@ export default async function SessionDetailPage({
                         <Button variant="secondary" type="submit">
                           {t("sessions.markSold")}
                         </Button>
-                      </form>
-                      <form action={deleteReferralAction}>
+                      </ActionForm>
+                      <ActionForm action={deleteReferralAction}>
                         <input type="hidden" name="sessionId" value={session.id} />
                         <input
                           type="hidden"
@@ -160,7 +161,7 @@ export default async function SessionDetailPage({
                         <Button variant="ghost" type="submit">
                           {t("common.delete")}
                         </Button>
-                      </form>
+                      </ActionForm>
                     </>
                   )}
                 </div>
@@ -169,7 +170,7 @@ export default async function SessionDetailPage({
             {products.length > 0 && (
               <Card className="space-y-4">
                 <h3 className="font-medium text-gray-900">{t("sessions.referProduct")}</h3>
-                <form action={createReferralAction} className="space-y-3">
+                <ActionForm action={createReferralAction} className="space-y-3">
                   <input type="hidden" name="sessionId" value={session.id} />
                   <input type="hidden" name="patientId" value={session.patientId} />
                   <Select name="productId" required>
@@ -183,7 +184,7 @@ export default async function SessionDetailPage({
                   <Button variant="secondary" type="submit">
                     {t("sessions.refer")}
                   </Button>
-                </form>
+                </ActionForm>
               </Card>
             )}
           </section>
@@ -203,7 +204,7 @@ export default async function SessionDetailPage({
           </Card>
           <Card className="space-y-4">
             <h2 className="text-lg font-medium text-gray-900">{t("sessions.sessionData")}</h2>
-            <form action={updateSessionAction} className="space-y-4">
+            <ActionForm action={updateSessionAction} className="space-y-4">
               <input type="hidden" name="sessionId" value={session.id} />
               <div>
                 <Label htmlFor="status">{t("common.status")}</Label>
@@ -240,7 +241,7 @@ export default async function SessionDetailPage({
               <Button type="submit" className="w-full">
                 {t("sessions.saveData")}
               </Button>
-            </form>
+            </ActionForm>
           </Card>
         </aside>
       </div>

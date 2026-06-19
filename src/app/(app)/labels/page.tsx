@@ -6,6 +6,7 @@ import {
   deleteLabelAction,
   updateLabelAction,
 } from "@/app/actions/domain";
+import { ActionForm } from "@/components/action-form";
 import { LabelChip } from "@/components/label-chip";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -30,14 +31,14 @@ export default async function LabelsPage() {
             <Card key={label.id} className="space-y-4">
               <div className="flex items-center justify-between gap-3">
                 <LabelChip name={label.name} color={label.color} />
-                <form action={deleteLabelAction}>
+                <ActionForm action={deleteLabelAction}>
                   <input type="hidden" name="labelId" value={label.id} />
                   <Button type="submit" variant="ghost">
                     {t("common.delete")}
                   </Button>
-                </form>
+                </ActionForm>
               </div>
-              <form action={updateLabelAction} className="space-y-3">
+              <ActionForm action={updateLabelAction} className="space-y-3">
                 <input type="hidden" name="labelId" value={label.id} />
                 <div>
                   <Label htmlFor={`name-${label.id}`}>{t("common.name")}</Label>
@@ -67,7 +68,7 @@ export default async function LabelsPage() {
                 <Button type="submit" variant="secondary">
                   {t("common.save")}
                 </Button>
-              </form>
+              </ActionForm>
             </Card>
           ))}
         </div>
@@ -75,7 +76,7 @@ export default async function LabelsPage() {
       <section>
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("labels.newLabel")}</h2>
-          <form action={createLabelAction} className="space-y-4">
+          <ActionForm action={createLabelAction} className="space-y-4">
             <div>
               <Label htmlFor="name">{t("common.name")}</Label>
               <Input className="mt-1" id="name" name="name" required />
@@ -96,7 +97,7 @@ export default async function LabelsPage() {
               </select>
             </div>
             <Button type="submit">{t("common.add")}</Button>
-          </form>
+          </ActionForm>
         </Card>
       </section>
     </main>

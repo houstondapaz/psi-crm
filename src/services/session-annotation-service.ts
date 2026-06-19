@@ -1,3 +1,4 @@
+import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
@@ -24,7 +25,7 @@ async function getSessionForPractice(auth: AuthContext, sessionId: string) {
 export async function createAnnotation(auth: AuthContext, input: CreateAnnotationInput) {
   const session = await getSessionForPractice(auth, input.sessionId);
   if (!session) {
-    throw new Error("Session not found");
+    throw new AppError("errors.sessionNotFound");
   }
 
   const now = new Date();
@@ -56,7 +57,7 @@ export async function updateAnnotation(auth: AuthContext, input: UpdateAnnotatio
     });
 
   if (!annotation) {
-    throw new Error("Annotation not found");
+    throw new AppError("errors.annotationNotFound");
   }
 
   return annotation;
@@ -69,6 +70,6 @@ export async function deleteAnnotation(auth: AuthContext, annotationId: string) 
     .delete();
 
   if (!deleted) {
-    throw new Error("Annotation not found");
+    throw new AppError("errors.annotationNotFound");
   }
 }
