@@ -42,7 +42,7 @@ npm test
 
 ## Deploy
 
-O runbook de deploy AWS + Vault está em [docs/deployment/aws-vault.md](./docs/deployment/aws-vault.md).
+O runbook de deploy Fly.io está em [docs/deployment/fly.md](./docs/deployment/fly.md).
 
 ## Domínio vs código
 
