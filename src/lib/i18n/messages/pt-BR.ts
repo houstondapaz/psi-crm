@@ -51,6 +51,8 @@ export const messagesPtBr = {
     navProducts: "Produtos",
     navLabels: "Etiquetas",
     signOut: "Sair",
+    openMenu: "Abrir menu",
+    closeMenu: "Fechar menu",
   },
   agenda: {
     title: "Agenda",
