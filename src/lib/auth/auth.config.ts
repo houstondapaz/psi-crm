@@ -20,7 +20,7 @@ export const authConfig = {
     },
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;
-      const publicPaths = ["/login", "/register", "/api/auth", "/api/cron"];
+      const publicPaths = ["/login", "/register", "/api/auth", "/api/cron", "/api/health", "/api/live"];
       const isPublic = publicPaths.some((path) => pathname.startsWith(path));
       if (isPublic) {
         return true;

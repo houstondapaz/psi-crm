@@ -76,7 +76,9 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The [Release workflow](../../.github/workflows/release.yml) runs tests, deploys via `fly deploy --remote-only`, then checks `https://<APP_DOMAIN>/api/health`.
+The [Release workflow](../../.github/workflows/release.yml) runs tests, deploys via `fly deploy --remote-only`, then checks `https://<APP_DOMAIN>/api/health` (includes database connectivity).
+
+Fly machine health checks use `/api/live` (process only, no database) so deploys succeed even when the database is temporarily unreachable. Both endpoints are public and bypass auth middleware.
 
 ## Database Changes
 
