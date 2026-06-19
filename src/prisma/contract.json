@@ -393,6 +393,13 @@
           },
           "Patient": {
             "fields": {
+              "address": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -533,6 +540,9 @@
             },
             "storage": {
               "fields": {
+                "address": {
+                  "column": "address"
+                },
                 "createdAt": {
                   "column": "createdAt"
                 },
@@ -1894,6 +1904,11 @@
             },
             "patient": {
               "columns": {
+                "address": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz@1",
                   "default": {
@@ -2691,7 +2706,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "sha256:6b50e39254a19592f2733ab5f90125a875bb373345d7410dac2218bf72575f10"
+    "storageHash": "sha256:47e4239eeb297e17be46a316cc6d9e423bcafa2b712f16cb5d3fe46ae969193e"
   },
   "execution": {
     "executionHash": "sha256:3d511e5f0e812a5999a540ee9a4ed36135f9a0f35428445576057ad448374e36",

@@ -6,6 +6,7 @@ export const messagesPtBr = {
     name: "Nome",
     description: "Descrição",
     phone: "Telefone",
+    address: "Endereço",
     color: "Cor",
     status: "Status",
     cancel: "Cancelar",
@@ -24,6 +25,7 @@ export const messagesPtBr = {
     selectPatient: "Selecione um paciente...",
     defaultReminder: "Retomar contato",
     scheduledSession: "Sessão agendada",
+    searching: "Buscando...",
   },
   login: {
     title: "CRM Psi",

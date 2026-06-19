@@ -66,6 +66,13 @@ export default async function PatientDetailPage({
           {t("common.backToPatients")}
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-gray-900">{patient.name}</h1>
+        {(patient.email || patient.phone || patient.address) && (
+          <div className="mt-2 space-y-1 text-sm text-gray-600">
+            {patient.email && <p>{patient.email}</p>}
+            {patient.phone && <p>{patient.phone}</p>}
+            {patient.address && <p>{patient.address}</p>}
+          </div>
+        )}
       </div>
 
       <Card className="space-y-4">

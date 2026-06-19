@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { createPatientAction } from "@/app/actions/domain";
 import { ActionForm } from "@/components/action-form";
+import { AddressInput } from "@/components/address-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,6 +59,13 @@ export function CreatePatientModal() {
           <div>
             <Label htmlFor="create-patient-phone">{t("common.phone")}</Label>
             <Input className="mt-1" id="create-patient-phone" name="phone" />
+          </div>
+
+          <div>
+            <Label htmlFor="create-patient-address">{t("common.address")}</Label>
+            <div className="mt-1">
+              <AddressInput id="create-patient-address" />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">

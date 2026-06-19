@@ -53,6 +53,7 @@ export async function createPatientAction(
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? "") || undefined,
       phone: String(formData.get("phone") ?? "") || undefined,
+      address: String(formData.get("address") ?? "") || undefined,
     });
     revalidatePath("/patients");
   });

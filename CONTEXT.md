@@ -16,6 +16,10 @@ _Avoid_: Psicólogo, Profissional, Admin
 Pessoa atendida pelo psicólogo dentro de um consultório; objeto central do acompanhamento clínico e administrativo.
 _Avoid_: Cliente, Atendido
 
+**Endereço**:
+Local de residência ou atendimento de um **Paciente**, armazenado como texto livre; a busca por mapa na interface é apenas auxílio ao preenchimento.
+_Avoid_: Localização, Coordenada
+
 **Sessão**:
 Encontro terapêutico entre psicólogo e paciente — presencial ou online; inclui **Anotações** clínicas, links de drive, produtos indicados, etc. Irmão de **Contato** (registros separados, sem hierarquia); não gera automaticamente um **Contato**. Pertence a um **Paciente** dentro de um **Consultório**.
 

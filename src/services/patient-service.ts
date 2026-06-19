@@ -11,6 +11,7 @@ export type CreatePatientInput = {
   name: string;
   email?: string;
   phone?: string;
+  address?: string;
 };
 
 export type PatientListItem = {
@@ -18,6 +19,7 @@ export type PatientListItem = {
   name: string;
   email: string | null;
   phone: string | null;
+  address: string | null;
   createdAt: Date;
   labels: LabelView[];
 };
@@ -34,6 +36,7 @@ export async function createPatient(auth: AuthContext, input: CreatePatientInput
     name: input.name,
     email: input.email ?? null,
     phone: input.phone ?? null,
+    address: input.address ?? null,
     createdAt: now,
   });
 }
