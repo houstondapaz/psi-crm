@@ -1,0 +1,34 @@
+[
+  {
+    "id": "column.patient.address",
+    "label": "Add column \"address\" to \"patient\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "address",
+        "table": "patient"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"address\" is missing",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1\n  FROM information_schema.columns\n  WHERE table_schema = 'public'\n    AND table_name = 'patient'\n    AND column_name = 'address'\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"address\"",
+        "sql": "ALTER TABLE \"public\".\"patient\" ADD COLUMN \"address\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"address\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1\n  FROM information_schema.columns\n  WHERE table_schema = 'public'\n    AND table_name = 'patient'\n    AND column_name = 'address'\n)"
+      }
+    ]
+  }
+]
