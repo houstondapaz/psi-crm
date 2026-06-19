@@ -84,7 +84,20 @@ Fly machine health checks use `/api/live` (process only, no database) so deploys
 
 Production schema changes must use explicit Prisma Next migrations. Do not run `npm run db:update` against production data.
 
-Before or after a schema-changing release, run the **Migrate** workflow manually from GitHub Actions. It applies pending migrations using the `PRODUCTION_DATABASE_URL` secret.
+`prisma-next migrate` is **replay-only**: it applies migration bundles already committed under `migrations/app/`. If you see `PN-RUN-3000` ("No on-disk migrations"), author them first:
+
+```bash
+# After contract changes in dev (one-time bootstrap or each schema change)
+npx prisma-next contract emit
+npx prisma-next migration plan --name <slug>   # e.g. initial, add_reminder_field
+
+# Commit the new directory under migrations/app/, then apply to production:
+npx prisma-next migrate --db "$PRODUCTION_DATABASE_URL"
+```
+
+Or run the **Migrate** workflow manually from GitHub Actions (uses the `PRODUCTION_DATABASE_URL` secret).
+
+**First-time production database:** ensure `migrations/app/` contains the baseline bundle (e.g. `*_baseline/`) before running migrate. Dev workflows use `db:init` / `db:update`; production uses `migration plan` + `migrate` only.
 
 ## Manual Deploy
 

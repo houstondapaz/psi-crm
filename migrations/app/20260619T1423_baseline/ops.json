@@ -1,0 +1,1890 @@
+[
+  {
+    "id": "table.contact",
+    "label": "Create table \"contact\"",
+    "summary": "Creates table \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contact\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"contact\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contact\"",
+        "sql": "CREATE TABLE \"public\".\"contact\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"description\" text,\n  \"id\" character(36) NOT NULL,\n  \"occurredAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"patientId\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"type\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contact\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"contact\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.fileLink",
+    "label": "Create table \"fileLink\"",
+    "summary": "Creates table \"fileLink\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "fileLink"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"fileLink\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"fileLink\"",
+        "sql": "CREATE TABLE \"public\".\"fileLink\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"label\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"sessionId\" text NOT NULL,\n  \"url\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"fileLink\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.label",
+    "label": "Create table \"label\"",
+    "summary": "Creates table \"label\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "label"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"label\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"label\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"label\"",
+        "sql": "CREATE TABLE \"public\".\"label\" (\n  \"color\" text NOT NULL,\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"name\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"label\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"label\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.patient",
+    "label": "Create table \"patient\"",
+    "summary": "Creates table \"patient\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "patient"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"patient\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patient\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"patient\"",
+        "sql": "CREATE TABLE \"public\".\"patient\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"email\" text,\n  \"id\" character(36) NOT NULL,\n  \"name\" text NOT NULL,\n  \"phone\" text,\n  \"practiceId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"patient\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patient\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.patientLabel",
+    "label": "Create table \"patientLabel\"",
+    "summary": "Creates table \"patientLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "patientLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"patientLabel\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"patientLabel\"",
+        "sql": "CREATE TABLE \"public\".\"patientLabel\" (\n  \"labelId\" text NOT NULL,\n  \"patientId\" text NOT NULL,\n  PRIMARY KEY (\"patientId\", \"labelId\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"patientLabel\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.practice",
+    "label": "Create table \"practice\"",
+    "summary": "Creates table \"practice\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "practice"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"practice\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"practice\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"practice\"",
+        "sql": "CREATE TABLE \"public\".\"practice\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"name\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"practice\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"practice\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.product",
+    "label": "Create table \"product\"",
+    "summary": "Creates table \"product\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "product"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"product\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"product\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"product\"",
+        "sql": "CREATE TABLE \"public\".\"product\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"description\" text,\n  \"id\" character(36) NOT NULL,\n  \"name\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"product\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"product\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.referral",
+    "label": "Create table \"referral\"",
+    "summary": "Creates table \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"referral\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"referral\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"referral\"",
+        "sql": "CREATE TABLE \"public\".\"referral\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"patientId\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"productId\" text NOT NULL,\n  \"sessionId\" text NOT NULL,\n  \"sold\" bool NOT NULL,\n  \"soldAt\" timestamptz,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"referral\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"referral\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.reminder",
+    "label": "Create table \"reminder\"",
+    "summary": "Creates table \"reminder\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "reminder"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"reminder\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"reminder\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"reminder\"",
+        "sql": "CREATE TABLE \"public\".\"reminder\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"description\" text,\n  \"id\" character(36) NOT NULL,\n  \"patientId\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"resolvedAt\" timestamptz,\n  \"status\" text NOT NULL DEFAULT 'pending',\n  \"targetDate\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"reminder\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"reminder\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.session",
+    "label": "Create table \"session\"",
+    "summary": "Creates table \"session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"session\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"session\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"session\"",
+        "sql": "CREATE TABLE \"public\".\"session\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"occurredAt\" timestamptz,\n  \"patientId\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"scheduledAt\" timestamptz,\n  \"status\" text NOT NULL DEFAULT 'completed',\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"session\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"session\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.sessionAnnotation",
+    "label": "Create table \"sessionAnnotation\"",
+    "summary": "Creates table \"sessionAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "sessionAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"sessionAnnotation\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"sessionAnnotation\"",
+        "sql": "CREATE TABLE \"public\".\"sessionAnnotation\" (\n  \"content\" text NOT NULL,\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"recordedAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"sessionId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"sessionAnnotation\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.sessionLabel",
+    "label": "Create table \"sessionLabel\"",
+    "summary": "Creates table \"sessionLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "sessionLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"sessionLabel\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"sessionLabel\"",
+        "sql": "CREATE TABLE \"public\".\"sessionLabel\" (\n  \"labelId\" text NOT NULL,\n  \"sessionId\" text NOT NULL,\n  PRIMARY KEY (\"sessionId\", \"labelId\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"sessionLabel\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"user\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"email\" text NOT NULL,\n  \"id\" character(36) NOT NULL,\n  \"name\" text NOT NULL,\n  \"passwordHash\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"user\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "unique.label.label_practiceId_name_key",
+    "label": "Add unique constraint on \"label\" (practiceId, name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "label_practiceId_name_key",
+        "table": "label"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"label_practiceId_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'label_practiceId_name_key'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"label\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"label_practiceId_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"label\" ADD CONSTRAINT \"label_practiceId_name_key\" UNIQUE (\"practiceId\", \"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"label_practiceId_name_key\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'label_practiceId_name_key'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"label\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_email_key",
+    "label": "Add unique constraint on \"user\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_email_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'user_email_key'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"user\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_email_key\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'user_email_key'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"user\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "index.contact.contact_practiceId_idx",
+    "label": "Create index \"contact_practiceId_idx\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contact_practiceId_idx",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contact_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"contact_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contact_practiceId_idx\"",
+        "sql": "CREATE INDEX \"contact_practiceId_idx\" ON \"public\".\"contact\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contact_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"contact_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.contact.contact_patientId_idx",
+    "label": "Create index \"contact_patientId_idx\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contact_patientId_idx",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contact_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"contact_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contact_patientId_idx\"",
+        "sql": "CREATE INDEX \"contact_patientId_idx\" ON \"public\".\"contact\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contact_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"contact_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.fileLink.fileLink_practiceId_idx",
+    "label": "Create index \"fileLink_practiceId_idx\" on \"fileLink\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "fileLink_practiceId_idx",
+        "table": "fileLink"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"fileLink_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"fileLink_practiceId_idx\"",
+        "sql": "CREATE INDEX \"fileLink_practiceId_idx\" ON \"public\".\"fileLink\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"fileLink_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.fileLink.fileLink_sessionId_idx",
+    "label": "Create index \"fileLink_sessionId_idx\" on \"fileLink\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "fileLink_sessionId_idx",
+        "table": "fileLink"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"fileLink_sessionId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink_sessionId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"fileLink_sessionId_idx\"",
+        "sql": "CREATE INDEX \"fileLink_sessionId_idx\" ON \"public\".\"fileLink\" (\"sessionId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"fileLink_sessionId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"fileLink_sessionId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.label.label_practiceId_idx",
+    "label": "Create index \"label_practiceId_idx\" on \"label\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "label_practiceId_idx",
+        "table": "label"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"label_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"label_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"label_practiceId_idx\"",
+        "sql": "CREATE INDEX \"label_practiceId_idx\" ON \"public\".\"label\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"label_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"label_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.patient.patient_practiceId_idx",
+    "label": "Create index \"patient_practiceId_idx\" on \"patient\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "patient_practiceId_idx",
+        "table": "patient"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"patient_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patient_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"patient_practiceId_idx\"",
+        "sql": "CREATE INDEX \"patient_practiceId_idx\" ON \"public\".\"patient\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"patient_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patient_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.patientLabel.patientLabel_patientId_idx",
+    "label": "Create index \"patientLabel_patientId_idx\" on \"patientLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "patientLabel_patientId_idx",
+        "table": "patientLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"patientLabel_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"patientLabel_patientId_idx\"",
+        "sql": "CREATE INDEX \"patientLabel_patientId_idx\" ON \"public\".\"patientLabel\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"patientLabel_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.patientLabel.patientLabel_labelId_idx",
+    "label": "Create index \"patientLabel_labelId_idx\" on \"patientLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "patientLabel_labelId_idx",
+        "table": "patientLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"patientLabel_labelId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel_labelId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"patientLabel_labelId_idx\"",
+        "sql": "CREATE INDEX \"patientLabel_labelId_idx\" ON \"public\".\"patientLabel\" (\"labelId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"patientLabel_labelId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientLabel_labelId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.product.product_practiceId_idx",
+    "label": "Create index \"product_practiceId_idx\" on \"product\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "product_practiceId_idx",
+        "table": "product"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"product_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"product_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"product_practiceId_idx\"",
+        "sql": "CREATE INDEX \"product_practiceId_idx\" ON \"public\".\"product\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"product_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"product_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.referral.referral_practiceId_idx",
+    "label": "Create index \"referral_practiceId_idx\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "referral_practiceId_idx",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"referral_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"referral_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"referral_practiceId_idx\"",
+        "sql": "CREATE INDEX \"referral_practiceId_idx\" ON \"public\".\"referral\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"referral_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"referral_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.referral.referral_sessionId_idx",
+    "label": "Create index \"referral_sessionId_idx\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "referral_sessionId_idx",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"referral_sessionId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"referral_sessionId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"referral_sessionId_idx\"",
+        "sql": "CREATE INDEX \"referral_sessionId_idx\" ON \"public\".\"referral\" (\"sessionId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"referral_sessionId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"referral_sessionId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.referral.referral_patientId_idx",
+    "label": "Create index \"referral_patientId_idx\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "referral_patientId_idx",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"referral_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"referral_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"referral_patientId_idx\"",
+        "sql": "CREATE INDEX \"referral_patientId_idx\" ON \"public\".\"referral\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"referral_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"referral_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.referral.referral_productId_idx",
+    "label": "Create index \"referral_productId_idx\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "referral_productId_idx",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"referral_productId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"referral_productId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"referral_productId_idx\"",
+        "sql": "CREATE INDEX \"referral_productId_idx\" ON \"public\".\"referral\" (\"productId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"referral_productId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"referral_productId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.reminder.reminder_practiceId_idx",
+    "label": "Create index \"reminder_practiceId_idx\" on \"reminder\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "reminder_practiceId_idx",
+        "table": "reminder"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"reminder_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"reminder_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"reminder_practiceId_idx\"",
+        "sql": "CREATE INDEX \"reminder_practiceId_idx\" ON \"public\".\"reminder\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"reminder_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"reminder_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.reminder.reminder_patientId_idx",
+    "label": "Create index \"reminder_patientId_idx\" on \"reminder\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "reminder_patientId_idx",
+        "table": "reminder"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"reminder_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"reminder_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"reminder_patientId_idx\"",
+        "sql": "CREATE INDEX \"reminder_patientId_idx\" ON \"public\".\"reminder\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"reminder_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"reminder_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.session.session_practiceId_idx",
+    "label": "Create index \"session_practiceId_idx\" on \"session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "session_practiceId_idx",
+        "table": "session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"session_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"session_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"session_practiceId_idx\"",
+        "sql": "CREATE INDEX \"session_practiceId_idx\" ON \"public\".\"session\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"session_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"session_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.session.session_patientId_idx",
+    "label": "Create index \"session_patientId_idx\" on \"session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "session_patientId_idx",
+        "table": "session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"session_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"session_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"session_patientId_idx\"",
+        "sql": "CREATE INDEX \"session_patientId_idx\" ON \"public\".\"session\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"session_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"session_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.sessionAnnotation.sessionAnnotation_practiceId_idx",
+    "label": "Create index \"sessionAnnotation_practiceId_idx\" on \"sessionAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessionAnnotation_practiceId_idx",
+        "table": "sessionAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessionAnnotation_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessionAnnotation_practiceId_idx\"",
+        "sql": "CREATE INDEX \"sessionAnnotation_practiceId_idx\" ON \"public\".\"sessionAnnotation\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessionAnnotation_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.sessionAnnotation.sessionAnnotation_sessionId_idx",
+    "label": "Create index \"sessionAnnotation_sessionId_idx\" on \"sessionAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessionAnnotation_sessionId_idx",
+        "table": "sessionAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessionAnnotation_sessionId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation_sessionId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessionAnnotation_sessionId_idx\"",
+        "sql": "CREATE INDEX \"sessionAnnotation_sessionId_idx\" ON \"public\".\"sessionAnnotation\" (\"sessionId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessionAnnotation_sessionId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionAnnotation_sessionId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.sessionLabel.sessionLabel_sessionId_idx",
+    "label": "Create index \"sessionLabel_sessionId_idx\" on \"sessionLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessionLabel_sessionId_idx",
+        "table": "sessionLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessionLabel_sessionId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel_sessionId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessionLabel_sessionId_idx\"",
+        "sql": "CREATE INDEX \"sessionLabel_sessionId_idx\" ON \"public\".\"sessionLabel\" (\"sessionId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessionLabel_sessionId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel_sessionId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.sessionLabel.sessionLabel_labelId_idx",
+    "label": "Create index \"sessionLabel_labelId_idx\" on \"sessionLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "sessionLabel_labelId_idx",
+        "table": "sessionLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"sessionLabel_labelId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel_labelId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"sessionLabel_labelId_idx\"",
+        "sql": "CREATE INDEX \"sessionLabel_labelId_idx\" ON \"public\".\"sessionLabel\" (\"labelId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"sessionLabel_labelId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"sessionLabel_labelId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.user.user_practiceId_idx",
+    "label": "Create index \"user_practiceId_idx\" on \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "user_practiceId_idx",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"user_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"user_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"user_practiceId_idx\"",
+        "sql": "CREATE INDEX \"user_practiceId_idx\" ON \"public\".\"user\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"user_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"user_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contact.contact_practiceId_fkey",
+    "label": "Add foreign key \"contact_practiceId_fkey\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contact_practiceId_fkey",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contact_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'contact_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"contact\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contact_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contact\"\nADD CONSTRAINT \"contact_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contact_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'contact_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"contact\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contact.contact_patientId_fkey",
+    "label": "Add foreign key \"contact_patientId_fkey\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contact_patientId_fkey",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contact_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'contact_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"contact\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contact_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contact\"\nADD CONSTRAINT \"contact_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contact_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'contact_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"contact\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.fileLink.fileLink_practiceId_fkey",
+    "label": "Add foreign key \"fileLink_practiceId_fkey\" on \"fileLink\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "fileLink_practiceId_fkey",
+        "table": "fileLink"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"fileLink_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'fileLink_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"fileLink\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"fileLink_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"fileLink\"\nADD CONSTRAINT \"fileLink_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"fileLink_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'fileLink_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"fileLink\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.fileLink.fileLink_sessionId_fkey",
+    "label": "Add foreign key \"fileLink_sessionId_fkey\" on \"fileLink\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "fileLink_sessionId_fkey",
+        "table": "fileLink"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"fileLink_sessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'fileLink_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"fileLink\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"fileLink_sessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"fileLink\"\nADD CONSTRAINT \"fileLink_sessionId_fkey\"\nFOREIGN KEY (\"sessionId\")\nREFERENCES \"public\".\"session\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"fileLink_sessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'fileLink_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"fileLink\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.label.label_practiceId_fkey",
+    "label": "Add foreign key \"label_practiceId_fkey\" on \"label\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "label_practiceId_fkey",
+        "table": "label"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"label_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'label_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"label\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"label_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"label\"\nADD CONSTRAINT \"label_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"label_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'label_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"label\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.patient.patient_practiceId_fkey",
+    "label": "Add foreign key \"patient_practiceId_fkey\" on \"patient\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "patient_practiceId_fkey",
+        "table": "patient"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"patient_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patient_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patient\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"patient_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"patient\"\nADD CONSTRAINT \"patient_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"patient_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patient_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patient\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.patientLabel.patientLabel_patientId_fkey",
+    "label": "Add foreign key \"patientLabel_patientId_fkey\" on \"patientLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "patientLabel_patientId_fkey",
+        "table": "patientLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"patientLabel_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientLabel_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientLabel\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"patientLabel_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"patientLabel\"\nADD CONSTRAINT \"patientLabel_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"patientLabel_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientLabel_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientLabel\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.patientLabel.patientLabel_labelId_fkey",
+    "label": "Add foreign key \"patientLabel_labelId_fkey\" on \"patientLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "patientLabel_labelId_fkey",
+        "table": "patientLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"patientLabel_labelId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientLabel_labelId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientLabel\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"patientLabel_labelId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"patientLabel\"\nADD CONSTRAINT \"patientLabel_labelId_fkey\"\nFOREIGN KEY (\"labelId\")\nREFERENCES \"public\".\"label\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"patientLabel_labelId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientLabel_labelId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientLabel\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.product.product_practiceId_fkey",
+    "label": "Add foreign key \"product_practiceId_fkey\" on \"product\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "product_practiceId_fkey",
+        "table": "product"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"product_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'product_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"product\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"product_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"product\"\nADD CONSTRAINT \"product_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"product_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'product_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"product\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.referral.referral_practiceId_fkey",
+    "label": "Add foreign key \"referral_practiceId_fkey\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "referral_practiceId_fkey",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"referral_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"referral_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"referral\"\nADD CONSTRAINT \"referral_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"referral_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.referral.referral_sessionId_fkey",
+    "label": "Add foreign key \"referral_sessionId_fkey\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "referral_sessionId_fkey",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"referral_sessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"referral_sessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"referral\"\nADD CONSTRAINT \"referral_sessionId_fkey\"\nFOREIGN KEY (\"sessionId\")\nREFERENCES \"public\".\"session\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"referral_sessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.referral.referral_patientId_fkey",
+    "label": "Add foreign key \"referral_patientId_fkey\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "referral_patientId_fkey",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"referral_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"referral_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"referral\"\nADD CONSTRAINT \"referral_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"referral_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.referral.referral_productId_fkey",
+    "label": "Add foreign key \"referral_productId_fkey\" on \"referral\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "referral_productId_fkey",
+        "table": "referral"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"referral_productId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_productId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"referral_productId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"referral\"\nADD CONSTRAINT \"referral_productId_fkey\"\nFOREIGN KEY (\"productId\")\nREFERENCES \"public\".\"product\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"referral_productId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'referral_productId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"referral\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.reminder.reminder_practiceId_fkey",
+    "label": "Add foreign key \"reminder_practiceId_fkey\" on \"reminder\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "reminder_practiceId_fkey",
+        "table": "reminder"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"reminder_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'reminder_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"reminder\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"reminder_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"reminder\"\nADD CONSTRAINT \"reminder_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"reminder_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'reminder_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"reminder\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.reminder.reminder_patientId_fkey",
+    "label": "Add foreign key \"reminder_patientId_fkey\" on \"reminder\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "reminder_patientId_fkey",
+        "table": "reminder"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"reminder_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'reminder_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"reminder\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"reminder_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"reminder\"\nADD CONSTRAINT \"reminder_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"reminder_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'reminder_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"reminder\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.session.session_practiceId_fkey",
+    "label": "Add foreign key \"session_practiceId_fkey\" on \"session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "session_practiceId_fkey",
+        "table": "session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"session_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'session_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"session\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"session_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"session\"\nADD CONSTRAINT \"session_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"session_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'session_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"session\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.session.session_patientId_fkey",
+    "label": "Add foreign key \"session_patientId_fkey\" on \"session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "session_patientId_fkey",
+        "table": "session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"session_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'session_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"session\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"session_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"session\"\nADD CONSTRAINT \"session_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"session_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'session_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"session\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.sessionAnnotation.sessionAnnotation_practiceId_fkey",
+    "label": "Add foreign key \"sessionAnnotation_practiceId_fkey\" on \"sessionAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "sessionAnnotation_practiceId_fkey",
+        "table": "sessionAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"sessionAnnotation_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionAnnotation_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionAnnotation\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"sessionAnnotation_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"sessionAnnotation\"\nADD CONSTRAINT \"sessionAnnotation_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"sessionAnnotation_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionAnnotation_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionAnnotation\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.sessionAnnotation.sessionAnnotation_sessionId_fkey",
+    "label": "Add foreign key \"sessionAnnotation_sessionId_fkey\" on \"sessionAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "sessionAnnotation_sessionId_fkey",
+        "table": "sessionAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"sessionAnnotation_sessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionAnnotation_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionAnnotation\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"sessionAnnotation_sessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"sessionAnnotation\"\nADD CONSTRAINT \"sessionAnnotation_sessionId_fkey\"\nFOREIGN KEY (\"sessionId\")\nREFERENCES \"public\".\"session\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"sessionAnnotation_sessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionAnnotation_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionAnnotation\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.sessionLabel.sessionLabel_sessionId_fkey",
+    "label": "Add foreign key \"sessionLabel_sessionId_fkey\" on \"sessionLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "sessionLabel_sessionId_fkey",
+        "table": "sessionLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"sessionLabel_sessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionLabel_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionLabel\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"sessionLabel_sessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"sessionLabel\"\nADD CONSTRAINT \"sessionLabel_sessionId_fkey\"\nFOREIGN KEY (\"sessionId\")\nREFERENCES \"public\".\"session\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"sessionLabel_sessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionLabel_sessionId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionLabel\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.sessionLabel.sessionLabel_labelId_fkey",
+    "label": "Add foreign key \"sessionLabel_labelId_fkey\" on \"sessionLabel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "sessionLabel_labelId_fkey",
+        "table": "sessionLabel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"sessionLabel_labelId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionLabel_labelId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionLabel\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"sessionLabel_labelId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"sessionLabel\"\nADD CONSTRAINT \"sessionLabel_labelId_fkey\"\nFOREIGN KEY (\"labelId\")\nREFERENCES \"public\".\"label\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"sessionLabel_labelId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'sessionLabel_labelId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"sessionLabel\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.user.user_practiceId_fkey",
+    "label": "Add foreign key \"user_practiceId_fkey\" on \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "user_practiceId_fkey",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"user_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'user_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"user\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"user_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"user\"\nADD CONSTRAINT \"user_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"user_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'user_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"user\"')\n)"
+      }
+    ]
+  }
+]
