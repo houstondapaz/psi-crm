@@ -149,6 +149,17 @@ export const messagesPtBr = {
     invalidRegistrationToken: "Token de cadastro inválido.",
     invalidCredentials: "E-mail ou senha incorretos.",
   },
+  labelColors: {
+    slate: "Ardósia",
+    red: "Vermelho",
+    orange: "Laranja",
+    amber: "Âmbar",
+    green: "Verde",
+    teal: "Verde-azulado",
+    blue: "Azul",
+    violet: "Violeta",
+    pink: "Rosa",
+  },
   labels: {
     title: "Etiquetas",
     description: "Catálogo central do consultório para classificar pacientes e sessões",

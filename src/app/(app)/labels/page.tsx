@@ -1,6 +1,5 @@
 import { requireAuth } from "@/lib/auth/session";
 import { listLabels } from "@/services/label-service";
-import { LABEL_COLORS } from "@/lib/label-colors";
 import {
   createLabelAction,
   deleteLabelAction,
@@ -8,6 +7,7 @@ import {
 } from "@/app/actions/domain";
 import { ActionForm } from "@/components/action-form";
 import { LabelChip } from "@/components/label-chip";
+import { LabelColorSelect } from "@/components/label-color-select";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -52,18 +52,10 @@ export default async function LabelsPage() {
                 </div>
                 <div>
                   <Label htmlFor={`color-${label.id}`}>{t("common.color")}</Label>
-                  <select
+                  <LabelColorSelect
                     id={`color-${label.id}`}
-                    name="color"
                     defaultValue={label.color}
-                    className="mt-1 block w-full rounded-sm border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900"
-                  >
-                    {LABEL_COLORS.map((color) => (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
                 <Button type="submit" variant="secondary">
                   {t("common.save")}
@@ -83,18 +75,7 @@ export default async function LabelsPage() {
             </div>
             <div>
               <Label htmlFor="color">{t("common.color")}</Label>
-              <select
-                id="color"
-                name="color"
-                defaultValue="blue"
-                className="mt-1 block w-full rounded-sm border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900"
-              >
-                {LABEL_COLORS.map((color) => (
-                  <option key={color} value={color}>
-                    {color}
-                  </option>
-                ))}
-              </select>
+              <LabelColorSelect id="color" defaultValue="blue" />
             </div>
             <Button type="submit">{t("common.add")}</Button>
           </ActionForm>

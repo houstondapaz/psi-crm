@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ActionState } from "@/lib/action-state";
 import { LABEL_COLORS, LABEL_COLOR_CLASSES, type LabelColor } from "@/lib/label-colors";
-import { LOCALE, t } from "@/lib/i18n";
+import { getLabelColorLabel, LOCALE, t } from "@/lib/i18n";
 import { LabelChip } from "@/components/label-chip";
 import { FormError } from "@/components/ui/form-error";
 
@@ -270,7 +270,7 @@ export function EtiquetaPicker({
                       <button
                         key={color}
                         type="button"
-                        aria-label={color}
+                        aria-label={getLabelColorLabel(color)}
                         onClick={() => setCreateColor(color)}
                         className={`h-6 w-6 rounded-full border-2 ${LABEL_COLOR_CLASSES[color]} ${
                           createColor === color ? "border-gray-900" : "border-transparent"

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { t, getWeekdayLabels } from "@/lib/i18n";
+import { t, getLabelColorLabel, getSessionStatusLabel, getWeekdayLabels } from "@/lib/i18n";
+import { LABEL_COLORS } from "@/lib/label-colors";
 
 describe("t", () => {
   it("returns login title in pt-BR", () => {
@@ -28,5 +29,32 @@ describe("getWeekdayLabels", () => {
       "Sáb",
       "Dom",
     ]);
+  });
+});
+
+describe("getLabelColorLabel", () => {
+  it("returns a pt-BR label for every label color", () => {
+    expect(LABEL_COLORS.map(getLabelColorLabel)).toEqual([
+      "Ardósia",
+      "Vermelho",
+      "Laranja",
+      "Âmbar",
+      "Verde",
+      "Verde-azulado",
+      "Azul",
+      "Violeta",
+      "Rosa",
+    ]);
+  });
+});
+
+describe("getSessionStatusLabel", () => {
+  it("returns pt-BR labels for known session statuses", () => {
+    expect(getSessionStatusLabel("scheduled")).toBe("Agendada");
+    expect(getSessionStatusLabel("completed")).toBe("Realizada");
+  });
+
+  it("falls back to the raw status for unknown values", () => {
+    expect(getSessionStatusLabel("unknown")).toBe("unknown");
   });
 });

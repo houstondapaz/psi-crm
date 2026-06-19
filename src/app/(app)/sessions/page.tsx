@@ -6,10 +6,11 @@ import { listLabels } from "@/services/label-service";
 import { CreateSessionModal } from "@/components/create-session-modal";
 import { LabelChip } from "@/components/label-chip";
 import { LabelFilter } from "@/components/label-filter";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { formatSessionDateTime, t } from "@/lib/i18n";
+import { formatSessionDateTime, getSessionStatusLabel, t } from "@/lib/i18n";
 
 function formatSessionDate(date: Date | null) {
   if (!date) {
@@ -60,7 +61,10 @@ export default async function SessionsPage({
           <Card key={session.id}>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-medium text-gray-900">{session.patientName}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-medium text-gray-900">{session.patientName}</p>
+                  <Badge variant="default">{getSessionStatusLabel(session.status)}</Badge>
+                </div>
                 <p className="text-sm text-gray-600">
                   {formatSessionDate(session.displayDate)}
                 </p>

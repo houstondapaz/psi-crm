@@ -1,3 +1,7 @@
+import {
+  LABEL_COLOR_MESSAGE_KEYS,
+  type LabelColor,
+} from "@/lib/label-colors";
 import { messagesPtBr } from "./messages/pt-BR";
 import type { LeafPaths } from "./types";
 
@@ -50,4 +54,19 @@ export function t(key: MessageKey, values?: InterpolationValues): string {
 
 export function getWeekdayLabels(): string[] {
   return WEEKDAY_MESSAGE_KEYS.map((key) => t(key));
+}
+
+export function getLabelColorLabel(color: LabelColor): string {
+  return t(LABEL_COLOR_MESSAGE_KEYS[color]);
+}
+
+const SESSION_STATUS_MESSAGE_KEYS = {
+  scheduled: "sessions.statusScheduled",
+  completed: "sessions.statusCompleted",
+} as const satisfies Record<string, MessageKey>;
+
+export function getSessionStatusLabel(status: string): string {
+  const key =
+    SESSION_STATUS_MESSAGE_KEYS[status as keyof typeof SESSION_STATUS_MESSAGE_KEYS];
+  return key ? t(key) : status;
 }
