@@ -1,4 +1,3 @@
-// HyperUI Application UI — Empty states: https://www.hyperui.dev/components/application-ui/empty-states
 type EmptyStateProps = {
   message: string;
 };

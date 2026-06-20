@@ -1,5 +1,5 @@
-// HyperUI Application UI — Badges: https://www.hyperui.dev/components/application-ui/badges
 import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/cn";
 
 type BadgeVariant = "default" | "warning" | "danger" | "success";
 
@@ -16,12 +16,16 @@ const variantClasses: Record<BadgeVariant, string> = {
 
 export function Badge({
   variant = "default",
-  className = "",
+  className,
   ...props
 }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variantClasses[variant]} ${className}`.trim()}
+      className={cn(
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        variantClasses[variant],
+        className,
+      )}
       {...props}
     />
   );

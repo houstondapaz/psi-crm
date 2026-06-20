@@ -1,4 +1,3 @@
-// HyperUI Application UI — Page headings: https://www.hyperui.dev/components/application-ui/page-headings
 type PageHeaderProps = {
   title: string;
   description?: string;

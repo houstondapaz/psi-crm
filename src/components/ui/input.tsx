@@ -1,13 +1,13 @@
-// HyperUI Application UI — Inputs: https://www.hyperui.dev/components/application-ui/inputs
-import type { InputHTMLAttributes } from "react";
+import { Input as BaseInput } from "@base-ui/react/input";
+import { mergeClassName } from "@/lib/cn";
 
-type InputProps = InputHTMLAttributes<HTMLInputElement>;
+const inputClassName =
+  "w-full rounded-lg border border-gray-200 p-3 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900";
 
-export function Input({ className = "", ...props }: InputProps) {
+type InputProps = React.ComponentProps<typeof BaseInput>;
+
+export function Input({ className, ...props }: InputProps) {
   return (
-    <input
-      className={`w-full rounded-lg border border-gray-200 p-3 text-sm shadow-sm focus:border-gray-900 focus:ring-gray-900 ${className}`.trim()}
-      {...props}
-    />
+    <BaseInput className={mergeClassName(inputClassName, className)} {...props} />
   );
 }

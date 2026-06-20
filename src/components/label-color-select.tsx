@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Select } from "@/components/ui/select";
 import {
   LABEL_COLORS,
   LABEL_COLOR_CLASSES,
@@ -9,6 +10,7 @@ import {
   type LabelColor,
 } from "@/lib/label-colors";
 import { getLabelColorLabel } from "@/lib/i18n";
+import { cn } from "@/lib/cn";
 
 type LabelColorSelectProps = {
   id: string;
@@ -24,17 +26,16 @@ export function LabelColorSelect({
   const [color, setColor] = useState(defaultValue);
 
   return (
-    <select
+    <Select
       id={id}
       name={name}
       value={color}
-      onChange={(event) => {
-        const { value } = event.target;
-        if (isLabelColor(value)) {
+      onValueChange={(value) => {
+        if (value && isLabelColor(value)) {
           setColor(value);
         }
       }}
-      className={`mt-1 block w-full rounded-sm border border-gray-200 px-3 py-2 text-sm ${LABEL_COLOR_CLASSES[color]}`}
+      className={cn("mt-1", LABEL_COLOR_CLASSES[color])}
     >
       {LABEL_COLORS.map((optionColor) => (
         <option
@@ -45,6 +46,6 @@ export function LabelColorSelect({
           {getLabelColorLabel(optionColor)}
         </option>
       ))}
-    </select>
+    </Select>
   );
 }

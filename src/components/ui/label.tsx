@@ -1,12 +1,11 @@
-// HyperUI Application UI — Inputs: https://www.hyperui.dev/components/application-ui/inputs
-import type { LabelHTMLAttributes } from "react";
+import { cn } from "@/lib/cn";
 
-type LabelProps = LabelHTMLAttributes<HTMLLabelElement>;
+type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 
-export function Label({ className = "", ...props }: LabelProps) {
+export function Label({ className, ...props }: LabelProps) {
   return (
     <label
-      className={`block text-sm font-medium text-gray-700 ${className}`.trim()}
+      className={cn("block text-sm font-medium text-gray-700", className)}
       {...props}
     />
   );

@@ -1,29 +1,32 @@
-// HyperUI Application UI — Buttons: https://www.hyperui.dev/components/application-ui/buttons
-import type { ButtonHTMLAttributes } from "react";
+import { Button as BaseButton } from "@base-ui/react/button";
+import { mergeClassName } from "@/lib/cn";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = React.ComponentProps<typeof BaseButton> & {
   variant?: ButtonVariant;
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "inline-block rounded-sm bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50",
+    "rounded-sm bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition hover:not-data-disabled:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 data-disabled:opacity-50",
   secondary:
-    "inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50",
+    "rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:not-data-disabled:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 data-disabled:opacity-50",
   ghost:
-    "inline-block rounded-sm px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50",
+    "rounded-sm px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:not-data-disabled:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 data-disabled:opacity-50",
 };
 
 export function Button({
   variant = "primary",
-  className = "",
+  className,
   ...props
 }: ButtonProps) {
   return (
-    <button
-      className={`${variantClasses[variant]} ${className}`.trim()}
+    <BaseButton
+      className={mergeClassName(
+        `inline-block select-none ${variantClasses[variant]}`,
+        className,
+      )}
       {...props}
     />
   );
