@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import type { ActionState } from "@/lib/action-state";
 import { initialActionState } from "@/lib/action-state";
 import { FormError } from "@/components/ui/form-error";
@@ -10,10 +10,19 @@ type ActionFormProps = {
   children: React.ReactNode;
   className?: string;
   id?: string;
+  onSuccess?: () => void;
 };
 
-export function ActionForm({ action, children, className, id }: ActionFormProps) {
-  const [state, formAction] = useActionState(action, initialActionState);
+export function ActionForm({ action, children, className, id, onSuccess }: ActionFormProps) {
+  const [state, formAction, isPending] = useActionState(action, initialActionState);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (wasPending.current && !isPending && !state.error) {
+      onSuccess?.();
+    }
+    wasPending.current = isPending;
+  }, [isPending, state.error, onSuccess]);
 
   return (
     <form id={id} action={formAction} className={className}>

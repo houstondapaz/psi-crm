@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { createPatientAction } from "@/app/actions/domain";
 import { ActionForm } from "@/components/action-form";
 import { AddressInput } from "@/components/address-input";
@@ -10,8 +11,18 @@ import { Label } from "@/components/ui/label";
 import { t } from "@/lib/i18n";
 
 export function CreatePatientModal() {
+  const [open, setOpen] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setFormKey((key) => key + 1);
+    }
+  }
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger render={<Button type="button" />}>
         {t("patients.newPatient")}
       </Dialog.Trigger>
@@ -19,7 +30,12 @@ export function CreatePatientModal() {
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Popup>
-          <ActionForm action={createPatientAction} className="space-y-4 p-6">
+          <ActionForm
+            key={formKey}
+            action={createPatientAction}
+            className="space-y-4 p-6"
+            onSuccess={() => handleOpenChange(false)}
+          >
             <div>
               <Dialog.Title>{t("patients.newPatient")}</Dialog.Title>
             </div>
