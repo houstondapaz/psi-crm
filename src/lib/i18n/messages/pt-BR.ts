@@ -93,6 +93,7 @@ export const messagesPtBr = {
     contacts: "Contatos",
     registerContact: "Registrar contato",
     labels: "Etiquetas",
+    patientData: "Dados do paciente",
   },
   sessions: {
     title: "Sessões",

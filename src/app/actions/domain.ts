@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth/session";
 import type { ActionState } from "@/lib/action-state";
 import { runAction } from "@/lib/safe-action";
-import { createPatient } from "@/services/patient-service";
+import { createPatient, updatePatient } from "@/services/patient-service";
 import { createReminder, resolveReminderAsContact } from "@/services/reminder-service";
 import {
   createAnnotation,
@@ -56,6 +56,24 @@ export async function createPatientAction(
       address: String(formData.get("address") ?? "") || undefined,
     });
     revalidatePath("/patients");
+  });
+}
+
+export async function updatePatientAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await updatePatient(auth, patientId, {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? "") || undefined,
+      phone: String(formData.get("phone") ?? "") || undefined,
+      address: String(formData.get("address") ?? "") || undefined,
+    });
+    revalidatePath("/patients");
+    revalidatePath(`/patients/${patientId}`);
   });
 }
 

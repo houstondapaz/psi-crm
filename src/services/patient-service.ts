@@ -6,8 +6,16 @@ import {
 } from "@/services/label-service";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
+import { AppError } from "@/lib/errors";
 
 export type CreatePatientInput = {
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+};
+
+export type UpdatePatientInput = {
   name: string;
   email?: string;
   phone?: string;
@@ -66,4 +74,31 @@ export async function getPatientById(auth: AuthContext, patientId: string) {
     .where((p) => p.id.eq(asEntityId(patientId)))
     .where((p) => p.practiceId.eq(auth.practiceId))
     .first();
+}
+
+export async function updatePatient(
+  auth: AuthContext,
+  patientId: string,
+  input: UpdatePatientInput,
+) {
+  const existing = await getPatientById(auth, patientId);
+  if (!existing) {
+    throw new AppError("errors.patientNotFound");
+  }
+
+  const updated = await db.orm.Patient
+    .where((p) => p.id.eq(asEntityId(patientId)))
+    .where((p) => p.practiceId.eq(auth.practiceId))
+    .update({
+      name: input.name.trim(),
+      email: input.email ?? null,
+      phone: input.phone ?? null,
+      address: input.address ?? null,
+    });
+
+  if (!updated) {
+    throw new AppError("errors.patientNotFound");
+  }
+
+  return updated;
 }

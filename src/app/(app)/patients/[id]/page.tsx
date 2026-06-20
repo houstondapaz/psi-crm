@@ -8,6 +8,7 @@ import {
   detachPatientLabelAction,
   resolveReminderAction,
   scheduleSessionAction,
+  updatePatientAction,
 } from "@/app/actions/domain";
 import { requireAuth } from "@/lib/auth/session";
 import { getPatientById } from "@/services/patient-service";
@@ -15,6 +16,7 @@ import { listContactsByPatient, listRemindersByPatient } from "@/services/remind
 import { listSessionsByPatient } from "@/services/session-service";
 import { listLabels, listLabelsByPatient } from "@/services/label-service";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
+import { AddressInput } from "@/components/address-input";
 import { ActionForm } from "@/components/action-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,14 +68,50 @@ export default async function PatientDetailPage({
           {t("common.backToPatients")}
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-gray-900">{patient.name}</h1>
-        {(patient.email || patient.phone || patient.address) && (
-          <div className="mt-2 space-y-1 text-sm text-gray-600">
-            {patient.email && <p>{patient.email}</p>}
-            {patient.phone && <p>{patient.phone}</p>}
-            {patient.address && <p>{patient.address}</p>}
-          </div>
-        )}
       </div>
+
+      <Card className="space-y-4">
+        <h2 className="text-lg font-medium text-gray-900">{t("patients.patientData")}</h2>
+        <ActionForm action={updatePatientAction} className="space-y-4">
+          <input type="hidden" name="patientId" value={id} />
+          <div>
+            <Label htmlFor="name">{t("common.name")}</Label>
+            <Input
+              className="mt-1"
+              id="name"
+              name="name"
+              defaultValue={patient.name}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="email">{t("common.email")}</Label>
+            <Input
+              className="mt-1"
+              id="email"
+              name="email"
+              type="email"
+              defaultValue={patient.email ?? ""}
+            />
+          </div>
+          <div>
+            <Label htmlFor="phone">{t("common.phone")}</Label>
+            <Input
+              className="mt-1"
+              id="phone"
+              name="phone"
+              defaultValue={patient.phone ?? ""}
+            />
+          </div>
+          <div>
+            <Label htmlFor="address">{t("common.address")}</Label>
+            <div className="mt-1">
+              <AddressInput id="address" defaultValue={patient.address ?? ""} />
+            </div>
+          </div>
+          <Button type="submit">{t("common.save")}</Button>
+        </ActionForm>
+      </Card>
 
       <Card className="space-y-4">
         <h2 className="text-lg font-medium text-gray-900">{t("patients.labels")}</h2>
