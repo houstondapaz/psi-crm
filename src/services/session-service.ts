@@ -32,6 +32,8 @@ export type SessionListItem = {
   patientName: string;
   status: string;
   displayDate: Date | null;
+  scheduledAt: Date | null;
+  occurredAt: Date | null;
   labels: LabelView[];
 };
 
@@ -121,6 +123,8 @@ export async function listAllSessions(
       patientName: session.patient.name,
       status: session.status,
       displayDate: session.occurredAt ?? session.scheduledAt ?? null,
+      scheduledAt: session.scheduledAt,
+      occurredAt: session.occurredAt,
       labels: labelsMap.get(session.id) ?? [],
     }))
     .sort((a, b) => {
@@ -190,6 +194,55 @@ export async function updateSession(
   }
 
   return updated;
+}
+
+export async function cancelSession(auth: AuthContext, sessionId: string) {
+  const existing = await getSessionForPractice(auth, sessionId);
+  if (!existing) {
+    throw new AppError("errors.sessionNotFound");
+  }
+  if (existing.status !== "scheduled") {
+    throw new AppError("errors.sessionNotScheduled");
+  }
+
+  const updated = await db.orm.Session
+    .where((s) => s.id.eq(asEntityId(sessionId)))
+    .where((s) => s.practiceId.eq(auth.practiceId))
+    .update({ status: "cancelled" });
+
+  if (!updated) {
+    throw new AppError("errors.sessionNotFound");
+  }
+
+  return updated;
+}
+
+export async function deleteSession(auth: AuthContext, sessionId: string) {
+  const deleted = await db.orm.Session
+    .where((s) => s.id.eq(asEntityId(sessionId)))
+    .where((s) => s.practiceId.eq(auth.practiceId))
+    .delete();
+
+  if (!deleted) {
+    throw new AppError("errors.sessionNotFound");
+  }
+}
+
+export async function rescheduleSession(
+  auth: AuthContext,
+  sessionId: string,
+  date: Date,
+) {
+  const existing = await getSessionForPractice(auth, sessionId);
+  if (!existing) {
+    throw new AppError("errors.sessionNotFound");
+  }
+
+  if (existing.status === "completed") {
+    return updateSession(auth, sessionId, { occurredAt: date });
+  }
+
+  return updateSession(auth, sessionId, { scheduledAt: date });
 }
 
 export async function addFileLink(

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import { NativeSelect } from "@/components/ui/native-select";
 import { t } from "@/lib/i18n";
 
 type PatientOption = {
@@ -38,7 +38,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
 
             <div>
               <Label htmlFor="create-session-patient">{t("sessions.patient")}</Label>
-              <Select
+              <NativeSelect
                 className="mt-1"
                 id="create-session-patient"
                 name="patientId"
@@ -53,7 +53,7 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
                     {patient.name}
                   </option>
                 ))}
-              </Select>
+              </NativeSelect>
             </div>
 
             <div>

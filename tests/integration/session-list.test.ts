@@ -4,8 +4,11 @@ import { registerPractice } from "@/services/auth-service";
 import { createPatient } from "@/services/patient-service";
 import {
   createSession,
+  cancelSession,
+  deleteSession,
   getSessionById,
   listAllSessions,
+  rescheduleSession,
   scheduleSession,
   updateSession,
 } from "@/services/session-service";
@@ -92,5 +95,90 @@ describe("Session list and detail", () => {
 
     expect(updated.status).toBe("completed");
     expect(updated.occurredAt?.toISOString()).toBe(occurredAt.toISOString());
+  });
+
+  it("cancels a scheduled session", async () => {
+    const { practice, user } = await registerPractice({
+      practiceName: "Consultório",
+      userName: "Dra. Ana",
+      email: "ana4@example.com",
+      password: "senha123",
+    });
+    const auth = { practiceId: practice.id, userId: user.id };
+    const patient = await createPatient(auth, { name: "Carlos" });
+    const session = await scheduleSession(auth, {
+      patientId: patient.id,
+      scheduledAt: new Date("2026-06-20T10:00:00Z"),
+    });
+
+    const cancelled = await cancelSession(auth, session.id);
+
+    expect(cancelled.status).toBe("cancelled");
+    expect(cancelled.scheduledAt?.toISOString()).toBe("2026-06-20T10:00:00.000Z");
+
+    const detail = await getSessionById(auth, session.id);
+    expect(detail?.status).toBe("cancelled");
+  });
+
+  it("deletes a session and related list entry", async () => {
+    const { practice, user } = await registerPractice({
+      practiceName: "Consultório",
+      userName: "Dra. Ana",
+      email: "ana5@example.com",
+      password: "senha123",
+    });
+    const auth = { practiceId: practice.id, userId: user.id };
+    const patient = await createPatient(auth, { name: "Carlos" });
+    const session = await scheduleSession(auth, {
+      patientId: patient.id,
+      scheduledAt: new Date("2026-06-20T10:00:00Z"),
+    });
+
+    await deleteSession(auth, session.id);
+
+    expect(await getSessionById(auth, session.id)).toBeNull();
+    expect(await listAllSessions(auth)).toHaveLength(0);
+  });
+
+  it("reschedules a scheduled session date", async () => {
+    const { practice, user } = await registerPractice({
+      practiceName: "Consultório",
+      userName: "Dra. Ana",
+      email: "ana6@example.com",
+      password: "senha123",
+    });
+    const auth = { practiceId: practice.id, userId: user.id };
+    const patient = await createPatient(auth, { name: "Carlos" });
+    const session = await scheduleSession(auth, {
+      patientId: patient.id,
+      scheduledAt: new Date("2026-06-20T10:00:00Z"),
+    });
+    const newDate = new Date("2026-06-21T14:00:00Z");
+
+    const updated = await rescheduleSession(auth, session.id, newDate);
+
+    expect(updated.scheduledAt?.toISOString()).toBe(newDate.toISOString());
+    expect(updated.status).toBe("scheduled");
+  });
+
+  it("reschedules a completed session occurrence date", async () => {
+    const { practice, user } = await registerPractice({
+      practiceName: "Consultório",
+      userName: "Dra. Ana",
+      email: "ana7@example.com",
+      password: "senha123",
+    });
+    const auth = { practiceId: practice.id, userId: user.id };
+    const patient = await createPatient(auth, { name: "Carlos" });
+    const session = await createSession(auth, {
+      patientId: patient.id,
+      occurredAt: new Date("2026-06-14T10:00:00Z"),
+    });
+    const newDate = new Date("2026-06-14T11:30:00Z");
+
+    const updated = await rescheduleSession(auth, session.id, newDate);
+
+    expect(updated.occurredAt?.toISOString()).toBe(newDate.toISOString());
+    expect(updated.status).toBe("completed");
   });
 });

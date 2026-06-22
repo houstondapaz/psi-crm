@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { mergeClassName } from "@/lib/cn";
+import { PopupContainerProvider } from "@/components/ui/popup-container-context";
 
 const backdropClassName =
   "fixed inset-0 min-h-dvh bg-black/40 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-[-webkit-touch-callout:none]:absolute";
@@ -25,8 +27,16 @@ function DialogPopup({
   className,
   ...props
 }: React.ComponentProps<typeof BaseDialog.Popup>) {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+
   return (
-    <BaseDialog.Popup className={mergeClassName(popupClassName, className)} {...props} />
+    <PopupContainerProvider value={container}>
+      <BaseDialog.Popup
+        ref={setContainer}
+        className={mergeClassName(popupClassName, className)}
+        {...props}
+      />
+    </PopupContainerProvider>
   );
 }
 

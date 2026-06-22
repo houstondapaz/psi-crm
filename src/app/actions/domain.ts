@@ -15,8 +15,11 @@ import {
 } from "@/services/session-annotation-service";
 import {
   addFileLink,
+  cancelSession,
   createSession,
   deleteFileLink,
+  deleteSession,
+  rescheduleSession,
   scheduleSession,
   updateFileLink,
   updateSession,
@@ -148,6 +151,48 @@ export async function updateSessionAction(
       occurredAt: occurredAtRaw ? new Date(occurredAtRaw) : null,
     });
 
+    revalidateSessionPaths(sessionId);
+  });
+}
+
+export async function cancelSessionAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const sessionId = String(formData.get("sessionId") ?? "");
+    await cancelSession(auth, sessionId);
+    revalidateSessionPaths(sessionId);
+  });
+}
+
+export async function deleteSessionAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const sessionId = String(formData.get("sessionId") ?? "");
+    await deleteSession(auth, sessionId);
+    revalidatePath("/sessions");
+    revalidatePath("/dashboard");
+    redirect("/sessions");
+  });
+}
+
+export async function rescheduleSessionAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const sessionId = String(formData.get("sessionId") ?? "");
+    await rescheduleSession(
+      auth,
+      sessionId,
+      new Date(String(formData.get("scheduledAt") ?? "")),
+    );
     revalidateSessionPaths(sessionId);
   });
 }

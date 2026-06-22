@@ -14,8 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={LOCALE}>
-      <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-        {children}
+      <body className="relative min-h-screen bg-gray-50 text-gray-900 antialiased">
+        <div className="isolate">{children}</div>
       </body>
     </html>
   );

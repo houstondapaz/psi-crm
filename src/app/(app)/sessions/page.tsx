@@ -4,6 +4,7 @@ import { listPatients } from "@/services/patient-service";
 import { listAllSessions } from "@/services/session-service";
 import { listLabels } from "@/services/label-service";
 import { CreateSessionModal } from "@/components/create-session-modal";
+import { SessionActionsMenu } from "@/components/session-actions-menu";
 import { LabelChip } from "@/components/label-chip";
 import { LabelFilter } from "@/components/label-filter";
 import { Badge } from "@/components/ui/badge";
@@ -80,12 +81,20 @@ export default async function SessionsPage({
                   </div>
                 )}
               </div>
-              <Link
-                href={`/sessions/${session.id}`}
-                className="inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-              >
-                {t("common.viewSession")}
-              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                <SessionActionsMenu
+                  sessionId={session.id}
+                  status={session.status}
+                  scheduledAt={session.scheduledAt?.toISOString() ?? null}
+                  occurredAt={session.occurredAt?.toISOString() ?? null}
+                />
+                <Link
+                  href={`/sessions/${session.id}`}
+                  className="inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                >
+                  {t("common.viewSession")}
+                </Link>
+              </div>
             </div>
           </Card>
         ))}

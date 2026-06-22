@@ -63,6 +63,7 @@ export function getLabelColorLabel(color: LabelColor): string {
 const SESSION_STATUS_MESSAGE_KEYS = {
   scheduled: "sessions.statusScheduled",
   completed: "sessions.statusCompleted",
+  cancelled: "sessions.statusCancelled",
 } as const satisfies Record<string, MessageKey>;
 
 export function getSessionStatusLabel(status: string): string {

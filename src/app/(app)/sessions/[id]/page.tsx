@@ -26,7 +26,7 @@ import { AnnotationCard } from "@/components/annotation-card";
 import { ActionForm } from "@/components/action-form";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { FileLinkCard } from "@/components/file-link-card";
-import { formatSessionDateTime, t } from "@/lib/i18n";
+import { formatSessionDateTime, t , getSessionStatusLabel } from "@/lib/i18n";
 
 function toDatetimeLocalValue(date: Date | null) {
   if (!date) {
@@ -73,7 +73,7 @@ export default async function SessionDetailPage({
               {session.patientName}
             </Link>
           </h1>
-          <Badge variant="default">{session.status}</Badge>
+          <Badge variant="default">{getSessionStatusLabel(session.status)}</Badge>
         </div>
       </div>
 
@@ -204,7 +204,11 @@ export default async function SessionDetailPage({
           </Card>
           <Card className="space-y-4">
             <h2 className="text-lg font-medium text-gray-900">{t("sessions.sessionData")}</h2>
-            <ActionForm action={updateSessionAction} className="space-y-4">
+            <ActionForm
+              key={`${session.status}-${session.scheduledAt?.toISOString() ?? ""}-${session.occurredAt?.toISOString() ?? ""}`}
+              action={updateSessionAction}
+              className="space-y-4"
+            >
               <input type="hidden" name="sessionId" value={session.id} />
               <div>
                 <Label htmlFor="status">{t("common.status")}</Label>
@@ -216,6 +220,7 @@ export default async function SessionDetailPage({
                 >
                   <option value="scheduled">{t("sessions.statusScheduled")}</option>
                   <option value="completed">{t("sessions.statusCompleted")}</option>
+                  <option value="cancelled">{t("sessions.statusCancelled")}</option>
                 </Select>
               </div>
               <div>
