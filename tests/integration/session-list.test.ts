@@ -51,6 +51,35 @@ describe("Session list and detail", () => {
     );
   });
 
+  it("lists sessions for a single patient", async () => {
+    const { practice, user } = await registerPractice({
+      practiceName: "Consultório",
+      userName: "Dra. Ana",
+      email: "ana-patient-list@example.com",
+      password: "senha123",
+    });
+    const auth = { practiceId: practice.id, userId: user.id };
+    const maria = await createPatient(auth, { name: "Maria Silva" });
+    const joao = await createPatient(auth, { name: "João Santos" });
+
+    await createSession(auth, {
+      patientId: maria.id,
+      occurredAt: new Date("2026-06-14T10:00:00Z"),
+    });
+    await scheduleSession(auth, {
+      patientId: joao.id,
+      scheduledAt: new Date("2026-06-20T15:30:00Z"),
+    });
+
+    const sessions = await listAllSessions(auth, { patientId: maria.id });
+
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0].patientName).toBe("Maria Silva");
+    expect(sessions[0].displayDate?.toISOString()).toBe(
+      "2026-06-14T10:00:00.000Z",
+    );
+  });
+
   it("returns session with patient name and annotations", async () => {
     const { practice, user } = await registerPractice({
       practiceName: "Consultório",

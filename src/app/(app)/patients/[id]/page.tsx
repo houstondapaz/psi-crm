@@ -18,40 +18,37 @@ import { AddressInput } from "@/components/address-input";
 import { ActionForm } from "@/components/action-form";
 import { CreateReminderModal } from "@/components/create-reminder-modal";
 import { CreateSessionModal } from "@/components/create-session-modal";
-import { Badge } from "@/components/ui/badge";
+import { LabelFilter } from "@/components/label-filter";
+import { SessionList } from "@/components/session-list";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatSessionDateTime, t } from "@/lib/i18n";
 
-function formatSessionDate(session: {
-  status: string;
-  scheduledAt: Date | null;
-  occurredAt: Date | null;
-}) {
-  const date =
-    session.status === "scheduled" ? session.scheduledAt : session.occurredAt;
-  if (!date) {
-    return t("common.noDate");
-  }
-  return formatSessionDateTime(date);
-}
-
 export default async function PatientDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ label?: string | string[] }>;
 }) {
   const auth = await requireAuth();
   const { id } = await params;
+  const labelParams = await searchParams;
+  const labelParam = labelParams.label;
+  const labelIds = Array.isArray(labelParam)
+    ? labelParam
+    : labelParam
+      ? [labelParam]
+      : [];
   const patient = await getPatientById(auth, id);
   if (!patient) {
     notFound();
   }
 
   const [sessions, contacts, reminders, attachedLabels, catalog] = await Promise.all([
-    listSessionsByPatient(auth, id),
+    listSessionsByPatient(auth, id, { labelIds }),
     listContactsByPatient(auth, id),
     listRemindersByPatient(auth, id),
     listLabelsByPatient(auth, id),
@@ -83,25 +80,12 @@ export default async function PatientDetailPage({
         <div className="space-y-8 lg:col-span-2">
           <section className="space-y-3">
             <h2 className="text-lg font-medium text-gray-900">{t("patients.sessions")}</h2>
-            {sessions.length === 0 && (
-              <p className="text-sm text-gray-600">{t("patients.noSessions")}</p>
-            )}
-            {sessions.map((session) => (
-              <Card key={session.id}>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-3">
-                    <p className="text-sm text-gray-600">{formatSessionDate(session)}</p>
-                    <Badge variant="default">{session.status}</Badge>
-                  </div>
-                  <Link
-                    href={`/sessions/${session.id}`}
-                    className="inline-block rounded-sm border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-                  >
-                    {t("common.viewSession")}
-                  </Link>
-                </div>
-              </Card>
-            ))}
+            <LabelFilter
+              catalog={catalog}
+              selectedIds={labelIds}
+              basePath={`/patients/${id}`}
+            />
+            <SessionList sessions={sessions} emptyMessage={t("patients.noSessions")} />
           </section>
 
           <section className="grid gap-6 sm:grid-cols-2">

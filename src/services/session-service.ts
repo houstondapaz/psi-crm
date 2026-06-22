@@ -39,6 +39,7 @@ export type SessionListItem = {
 
 export type ListAllSessionsOptions = {
   labelIds?: string[];
+  patientId?: string;
 };
 
 export type SessionDetail = {
@@ -97,23 +98,26 @@ export async function scheduleSession(auth: AuthContext, input: ScheduleSessionI
   });
 }
 
-export async function listSessionsByPatient(auth: AuthContext, patientId: string) {
-  return db.orm.Session
-    .where((s) => s.patientId.eq(patientId))
-    .where((s) => s.practiceId.eq(auth.practiceId))
-    .orderBy((s) => s.createdAt.desc())
-    .all();
+export async function listSessionsByPatient(
+  auth: AuthContext,
+  patientId: string,
+  options?: Pick<ListAllSessionsOptions, "labelIds">,
+) {
+  return listAllSessions(auth, { ...options, patientId });
 }
 
 export async function listAllSessions(
   auth: AuthContext,
   options?: ListAllSessionsOptions,
 ): Promise<SessionListItem[]> {
+  const patientId = options?.patientId;
+  const baseQuery = db.orm.Session.where((s) => s.practiceId.eq(auth.practiceId));
+  const sessionsQuery = patientId
+    ? baseQuery.where((s) => s.patientId.eq(patientId))
+    : baseQuery;
+
   const [sessions, labelsMap] = await Promise.all([
-    db.orm.Session
-      .where((s) => s.practiceId.eq(auth.practiceId))
-      .include("patient", (p) => p.select("name"))
-      .all(),
+    sessionsQuery.include("patient", (p) => p.select("name")).all(),
     listSessionLabelsMap(auth),
   ]);
 
