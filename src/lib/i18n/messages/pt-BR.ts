@@ -94,6 +94,9 @@ export const messagesPtBr = {
     registerContact: "Registrar contato",
     labels: "Etiquetas",
     patientData: "Dados do paciente",
+    deletePatient: "Excluir paciente",
+    deleteConfirm:
+      "Tem certeza? Isso excluirá o paciente e todos os dados relacionados (sessões, lembretes e contatos).",
   },
   sessions: {
     title: "Sessões",

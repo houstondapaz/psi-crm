@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { resetDatabase } from "../helpers/db";
 import { registerPractice } from "@/services/auth-service";
-import { createPatient, listPatients, updatePatient } from "@/services/patient-service";
+import { createPatient, deletePatient, listPatients, updatePatient } from "@/services/patient-service";
 
 describe("PatientService", () => {
   beforeEach(async () => {
@@ -124,5 +124,48 @@ describe("PatientService", () => {
       phone: "11999999999",
       address: "Rua Augusta, 123 - São Paulo - SP",
     });
+  });
+
+  it("deletes patient scoped to practice", async () => {
+    const a = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+    const b = await registerPractice({
+      practiceName: "Consultório B",
+      userName: "Psicóloga B",
+      email: "b@example.com",
+      password: "senha123",
+    });
+
+    const patient = await createPatient(
+      { practiceId: a.practice.id, userId: a.user.id },
+      { name: "Maria" },
+    );
+
+    await createPatient(
+      { practiceId: b.practice.id, userId: b.user.id },
+      { name: "João" },
+    );
+
+    await deletePatient(
+      { practiceId: a.practice.id, userId: a.user.id },
+      patient.id,
+    );
+
+    const patientsA = await listPatients({
+      practiceId: a.practice.id,
+      userId: a.user.id,
+    });
+    const patientsB = await listPatients({
+      practiceId: b.practice.id,
+      userId: b.user.id,
+    });
+
+    expect(patientsA).toHaveLength(0);
+    expect(patientsB).toHaveLength(1);
+    expect(patientsB[0]?.name).toBe("João");
   });
 });

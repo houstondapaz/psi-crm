@@ -102,3 +102,14 @@ export async function updatePatient(
 
   return updated;
 }
+
+export async function deletePatient(auth: AuthContext, patientId: string) {
+  const deleted = await db.orm.Patient
+    .where((p) => p.id.eq(asEntityId(patientId)))
+    .where((p) => p.practiceId.eq(auth.practiceId))
+    .delete();
+
+  if (!deleted) {
+    throw new AppError("errors.patientNotFound");
+  }
+}

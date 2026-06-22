@@ -11,9 +11,17 @@ type ActionFormProps = {
   className?: string;
   id?: string;
   onSuccess?: () => void;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
 };
 
-export function ActionForm({ action, children, className, id, onSuccess }: ActionFormProps) {
+export function ActionForm({
+  action,
+  children,
+  className,
+  id,
+  onSuccess,
+  onSubmit,
+}: ActionFormProps) {
   const [state, formAction, isPending] = useActionState(action, initialActionState);
   const wasPending = useRef(false);
 
@@ -25,7 +33,7 @@ export function ActionForm({ action, children, className, id, onSuccess }: Actio
   }, [isPending, state.error, onSuccess]);
 
   return (
-    <form id={id} action={formAction} className={className}>
+    <form id={id} action={formAction} className={className} onSubmit={onSubmit}>
       <FormError message={state.error} />
       {children}
     </form>

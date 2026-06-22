@@ -16,6 +16,7 @@ import { listContactsByPatient, listRemindersByPatient } from "@/services/remind
 import { listSessionsByPatient } from "@/services/session-service";
 import { listLabels, listLabelsByPatient } from "@/services/label-service";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
+import { DeletePatientForm } from "@/components/delete-patient-form";
 import { AddressInput } from "@/components/address-input";
 import { ActionForm } from "@/components/action-form";
 import { Badge } from "@/components/ui/badge";
@@ -249,6 +250,8 @@ export default async function PatientDetailPage({
               hiddenFields={{ patientId: id }}
             />
           </Card>
+
+          <DeletePatientForm patientId={id} />
         </aside>
       </div>
     </main>

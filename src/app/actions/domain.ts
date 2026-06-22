@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth/session";
 import type { ActionState } from "@/lib/action-state";
 import { runAction } from "@/lib/safe-action";
-import { createPatient, updatePatient } from "@/services/patient-service";
+import { createPatient, deletePatient, updatePatient } from "@/services/patient-service";
 import { createReminder, resolveReminderAsContact } from "@/services/reminder-service";
 import {
   createAnnotation,
@@ -74,6 +74,21 @@ export async function updatePatientAction(
     });
     revalidatePath("/patients");
     revalidatePath(`/patients/${patientId}`);
+  });
+}
+
+export async function deletePatientAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await deletePatient(auth, patientId);
+    revalidatePath("/patients");
+    revalidatePath("/sessions");
+    revalidatePath("/dashboard");
+    redirect("/patients");
   });
 }
 
