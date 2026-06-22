@@ -16,9 +16,13 @@ type PatientOption = {
 
 type CreateSessionModalProps = {
   patients: PatientOption[];
+  defaultPatientId?: string;
 };
 
-export function CreateSessionModal({ patients }: CreateSessionModalProps) {
+export function CreateSessionModal({
+  patients,
+  defaultPatientId,
+}: CreateSessionModalProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger render={<Button type="button" />}>
@@ -37,23 +41,30 @@ export function CreateSessionModal({ patients }: CreateSessionModalProps) {
             </div>
 
             <div>
-              <Label htmlFor="create-session-patient">{t("sessions.patient")}</Label>
-              <NativeSelect
-                className="mt-1"
-                id="create-session-patient"
-                name="patientId"
-                required
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  {t("common.selectPatient")}
-                </option>
-                {patients.map((patient) => (
-                  <option key={patient.id} value={patient.id}>
-                    {patient.name}
-                  </option>
-                ))}
-              </NativeSelect>
+              {!defaultPatientId && (
+                <>
+                  <Label htmlFor="create-session-patient">{t("sessions.patient")}</Label>
+                  <NativeSelect
+                    className="mt-1"
+                    id="create-session-patient"
+                    name="patientId"
+                    required
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      {t("common.selectPatient")}
+                    </option>
+                    {patients.map((patient) => (
+                      <option key={patient.id} value={patient.id}>
+                        {patient.name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </>
+              )}
+              {defaultPatientId && (
+                <input type="hidden" name="patientId" value={defaultPatientId} />
+              )}
             </div>
 
             <div>

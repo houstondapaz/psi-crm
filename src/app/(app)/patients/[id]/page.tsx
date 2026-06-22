@@ -3,11 +3,8 @@ import { notFound } from "next/navigation";
 import {
   attachPatientLabelAction,
   createAndAttachPatientLabelAction,
-  createReminderAction,
-  createSessionAction,
   detachPatientLabelAction,
   resolveReminderAction,
-  scheduleSessionAction,
   updatePatientAction,
 } from "@/app/actions/domain";
 import { requireAuth } from "@/lib/auth/session";
@@ -19,6 +16,8 @@ import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { DeletePatientForm } from "@/components/delete-patient-form";
 import { AddressInput } from "@/components/address-input";
 import { ActionForm } from "@/components/action-form";
+import { CreateReminderModal } from "@/components/create-reminder-modal";
+import { CreateSessionModal } from "@/components/create-session-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -68,68 +67,20 @@ export default async function PatientDetailPage({
         >
           {t("common.backToPatients")}
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-gray-900">{patient.name}</h1>
+        <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">{patient.name}</h1>
+          <div className="flex flex-wrap gap-2">
+            <CreateSessionModal
+              patients={[{ id, name: patient.name }]}
+              defaultPatientId={id}
+            />
+            <CreateReminderModal patientId={id} />
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
-          <section className="grid gap-6 sm:grid-cols-2">
-            <Card className="space-y-4">
-              <h2 className="text-lg font-medium text-gray-900">{t("patients.newSession")}</h2>
-              <ActionForm action={createSessionAction}>
-                <input type="hidden" name="patientId" value={id} />
-                <Button type="submit">{t("patients.registerSession")}</Button>
-              </ActionForm>
-            </Card>
-
-            <Card className="space-y-4">
-              <h2 className="text-lg font-medium text-gray-900">{t("patients.scheduleSession")}</h2>
-              <ActionForm action={scheduleSessionAction} className="space-y-4">
-                <input type="hidden" name="patientId" value={id} />
-                <div>
-                  <Label htmlFor="scheduledAt">{t("common.datetime")}</Label>
-                  <Input
-                    className="mt-1"
-                    id="scheduledAt"
-                    name="scheduledAt"
-                    type="datetime-local"
-                    required
-                  />
-                </div>
-                <Button type="submit">{t("patients.schedule")}</Button>
-              </ActionForm>
-            </Card>
-
-            <Card className="space-y-4 sm:col-span-2">
-              <h2 className="text-lg font-medium text-gray-900">{t("patients.newReminder")}</h2>
-              <ActionForm action={createReminderAction} className="grid gap-4 sm:grid-cols-2">
-                <input type="hidden" name="patientId" value={id} />
-                <div>
-                  <Label htmlFor="targetDate">{t("common.targetDate")}</Label>
-                  <Input
-                    className="mt-1"
-                    id="targetDate"
-                    name="targetDate"
-                    type="date"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="description">{t("common.description")}</Label>
-                  <Input
-                    className="mt-1"
-                    id="description"
-                    name="description"
-                    placeholder={t("patients.reminderPlaceholder")}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <Button type="submit">{t("patients.createReminder")}</Button>
-                </div>
-              </ActionForm>
-            </Card>
-          </section>
-
           <section className="space-y-3">
             <h2 className="text-lg font-medium text-gray-900">{t("patients.sessions")}</h2>
             {sessions.length === 0 && (
