@@ -35,7 +35,7 @@ export default async function ProductsPage() {
       <section>
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("products.newProduct")}</h2>
-          <ActionForm action={createProductAction} className="space-y-4">
+          <ActionForm action={createProductAction} className="space-y-4" successMessage="toast.productCreated">
             <div>
               <Label htmlFor="name">{t("common.name")}</Label>
               <Input className="mt-1" id="name" name="name" required />

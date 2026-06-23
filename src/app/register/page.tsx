@@ -15,7 +15,7 @@ export default function RegisterPage() {
         <p className="mt-1 text-sm text-gray-600">{t("register.subtitle")}</p>
       </div>
       <Card>
-        <ActionForm action={registerAction} className="space-y-4">
+        <ActionForm action={registerAction} className="space-y-4" showSuccessToast={false}>
           <div>
             <Label htmlFor="practiceName">{t("register.practiceName")}</Label>
             <Input

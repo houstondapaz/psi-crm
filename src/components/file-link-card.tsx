@@ -7,9 +7,9 @@ import {
 } from "@/app/actions/domain";
 import { initialActionState } from "@/lib/action-state";
 import { Card } from "@/components/ui/card";
-import { FormError } from "@/components/ui/form-error";
 import { Input } from "@/components/ui/input";
 import { t } from "@/lib/i18n";
+import { useActionFeedback } from "@/lib/use-action-feedback";
 
 type FileLinkCardProps = {
   sessionId: string;
@@ -63,15 +63,17 @@ export function FileLinkCard({
   label,
   url,
 }: FileLinkCardProps) {
-  const [updateState, updateFormAction] = useActionState(
+  const [updateState, updateFormAction, updatePending] = useActionState(
     updateFileLinkAction,
     initialActionState,
   );
-  const [deleteState, deleteFormAction] = useActionState(
+  const [deleteState, deleteFormAction, deletePending] = useActionState(
     deleteFileLinkAction,
     initialActionState,
   );
-  const error = updateState.error ?? deleteState.error;
+
+  useActionFeedback(updateState, updatePending, { successMessage: t("toast.linkSaved") });
+  useActionFeedback(deleteState, deletePending, { successMessage: t("toast.linkDeleted") });
 
   return (
     <Card>
@@ -80,7 +82,6 @@ export function FileLinkCard({
           action={updateFormAction}
           className="grid flex-1 gap-3 sm:grid-cols-[1fr_2fr_auto]"
         >
-          <FormError message={error} />
           <input type="hidden" name="sessionId" value={sessionId} />
           <input type="hidden" name="fileLinkId" value={fileLinkId} />
           <Input name="label" defaultValue={label} required />

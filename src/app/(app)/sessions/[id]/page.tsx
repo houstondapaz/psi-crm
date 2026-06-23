@@ -93,7 +93,7 @@ export default async function SessionDetailPage({
             ))}
             <Card className="space-y-4">
               <h3 className="font-medium text-gray-900">{t("sessions.newAnnotation")}</h3>
-              <ActionForm action={createAnnotationAction} className="space-y-3">
+              <ActionForm action={createAnnotationAction} className="space-y-3" successMessage="toast.created">
                 <input type="hidden" name="sessionId" value={session.id} />
                 <Textarea
                   name="content"
@@ -119,7 +119,7 @@ export default async function SessionDetailPage({
             ))}
             <Card className="space-y-4">
               <h3 className="font-medium text-gray-900">{t("sessions.addLink")}</h3>
-              <ActionForm action={addFileLinkAction} className="space-y-3">
+              <ActionForm action={addFileLinkAction} className="space-y-3" successMessage="toast.created">
                 <input type="hidden" name="sessionId" value={session.id} />
                 <Input name="label" placeholder={t("sessions.linkLabel")} required />
                 <Input name="url" placeholder={t("sessions.linkUrl")} required />
@@ -140,7 +140,7 @@ export default async function SessionDetailPage({
                     <Badge variant="success">{t("sessions.sold")}</Badge>
                   ) : (
                     <>
-                      <ActionForm action={markSoldAction}>
+                      <ActionForm action={markSoldAction} successMessage="toast.referralSold">
                         <input type="hidden" name="sessionId" value={session.id} />
                         <input
                           type="hidden"
@@ -151,7 +151,7 @@ export default async function SessionDetailPage({
                           {t("sessions.markSold")}
                         </Button>
                       </ActionForm>
-                      <ActionForm action={deleteReferralAction}>
+                      <ActionForm action={deleteReferralAction} successMessage="toast.referralDeleted">
                         <input type="hidden" name="sessionId" value={session.id} />
                         <input
                           type="hidden"
@@ -170,7 +170,7 @@ export default async function SessionDetailPage({
             {products.length > 0 && (
               <Card className="space-y-4">
                 <h3 className="font-medium text-gray-900">{t("sessions.referProduct")}</h3>
-                <ActionForm action={createReferralAction} className="space-y-3">
+                <ActionForm action={createReferralAction} className="space-y-3" successMessage="toast.referralCreated">
                   <input type="hidden" name="sessionId" value={session.id} />
                   <input type="hidden" name="patientId" value={session.patientId} />
                   <Select name="productId" required>
@@ -208,6 +208,7 @@ export default async function SessionDetailPage({
               key={`${session.status}-${session.scheduledAt?.toISOString() ?? ""}-${session.occurredAt?.toISOString() ?? ""}`}
               action={updateSessionAction}
               className="space-y-4"
+              successMessage="toast.sessionSaved"
             >
               <input type="hidden" name="sessionId" value={session.id} />
               <div>

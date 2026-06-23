@@ -15,7 +15,7 @@ export default function LoginPage() {
         <p className="mt-1 text-sm text-gray-600">{t("login.subtitle")}</p>
       </div>
       <Card>
-        <ActionForm action={loginAction} className="space-y-4">
+        <ActionForm action={loginAction} className="space-y-4" showSuccessToast={false}>
           <div>
             <Label htmlFor="email">{t("common.email")}</Label>
             <Input className="mt-1" id="email" name="email" type="email" required />

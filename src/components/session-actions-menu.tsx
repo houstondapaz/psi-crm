@@ -102,6 +102,7 @@ export function SessionActionsMenu({
               <ActionForm
                 action={cancelSessionAction}
                 className="flex justify-end gap-2 pt-2"
+                successMessage="toast.sessionCancelled"
                 onSuccess={closeDialog}
               >
                 <input type="hidden" name="sessionId" value={sessionId} />
@@ -133,7 +134,11 @@ export function SessionActionsMenu({
                 <Dialog.Title>{t("sessions.deleteSession")}</Dialog.Title>
                 <Dialog.Description>{t("sessions.deleteSessionConfirm")}</Dialog.Description>
               </div>
-              <ActionForm action={deleteSessionAction} className="flex justify-end gap-2 pt-2">
+              <ActionForm
+                action={deleteSessionAction}
+                className="flex justify-end gap-2 pt-2"
+                successMessage="toast.sessionDeleted"
+              >
                 <input type="hidden" name="sessionId" value={sessionId} />
                 <Dialog.Close render={<Button variant="secondary" type="button" />}>
                   {t("common.cancel")}
@@ -162,6 +167,7 @@ export function SessionActionsMenu({
               key={currentDate ?? "empty"}
               action={rescheduleSessionAction}
               className="space-y-4 p-6"
+              successMessage="toast.sessionRescheduled"
               onSuccess={closeDialog}
             >
               <div>

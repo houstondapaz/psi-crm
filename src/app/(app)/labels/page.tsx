@@ -31,14 +31,14 @@ export default async function LabelsPage() {
             <Card key={label.id} className="space-y-4">
               <div className="flex items-center justify-between gap-3">
                 <LabelChip name={label.name} color={label.color} />
-                <ActionForm action={deleteLabelAction}>
+                <ActionForm action={deleteLabelAction} successMessage="toast.labelDeleted">
                   <input type="hidden" name="labelId" value={label.id} />
                   <Button type="submit" variant="ghost">
                     {t("common.delete")}
                   </Button>
                 </ActionForm>
               </div>
-              <ActionForm action={updateLabelAction} className="space-y-3">
+              <ActionForm action={updateLabelAction} className="space-y-3" successMessage="toast.labelSaved">
                 <input type="hidden" name="labelId" value={label.id} />
                 <div>
                   <Label htmlFor={`name-${label.id}`}>{t("common.name")}</Label>
@@ -68,7 +68,7 @@ export default async function LabelsPage() {
       <section>
         <Card className="space-y-4">
           <h2 className="text-lg font-medium text-gray-900">{t("labels.newLabel")}</h2>
-          <ActionForm action={createLabelAction} className="space-y-4">
+          <ActionForm action={createLabelAction} className="space-y-4" successMessage="toast.created">
             <div>
               <Label htmlFor="name">{t("common.name")}</Label>
               <Input className="mt-1" id="name" name="name" required />

@@ -34,6 +34,7 @@ export function CreatePatientModal() {
             key={formKey}
             action={createPatientAction}
             className="space-y-4 p-6"
+            successMessage="toast.patientCreated"
             onSuccess={() => handleOpenChange(false)}
           >
             <div>

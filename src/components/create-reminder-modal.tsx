@@ -37,6 +37,7 @@ export function CreateReminderModal({ patientId }: CreateReminderModalProps) {
             key={formKey}
             action={createReminderAction}
             className="space-y-4 p-6"
+            successMessage="toast.reminderCreated"
             onSuccess={() => handleOpenChange(false)}
           >
             <input type="hidden" name="patientId" value={patientId} />

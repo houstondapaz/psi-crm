@@ -7,10 +7,10 @@ import {
 } from "@/app/actions/domain";
 import { initialActionState } from "@/lib/action-state";
 import { Card } from "@/components/ui/card";
-import { FormError } from "@/components/ui/form-error";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { t } from "@/lib/i18n";
+import { useActionFeedback } from "@/lib/use-action-feedback";
 
 type AnnotationCardProps = {
   sessionId: string;
@@ -83,9 +83,19 @@ export function AnnotationCard({
   const [editing, setEditing] = useState(false);
   const [editingTime, setEditingTime] = useState(false);
   const formId = `annotation-form-${annotationId}`;
-  const [updateState, updateFormAction] = useActionState(updateAnnotationAction, initialActionState);
-  const [deleteState, deleteFormAction] = useActionState(deleteAnnotationAction, initialActionState);
-  const error = updateState.error ?? deleteState.error;
+  const [updateState, updateFormAction, updatePending] = useActionState(
+    updateAnnotationAction,
+    initialActionState,
+  );
+  const [deleteState, deleteFormAction, deletePending] = useActionState(
+    deleteAnnotationAction,
+    initialActionState,
+  );
+
+  useActionFeedback(updateState, updatePending, { successMessage: t("toast.saved") });
+  useActionFeedback(deleteState, deletePending, {
+    successMessage: t("toast.annotationDeleted"),
+  });
 
   function closeEditMode() {
     setEditing(false);
@@ -145,7 +155,6 @@ export function AnnotationCard({
         </button>
       </div>
       <form id={formId} action={updateFormAction} className="space-y-3">
-        <FormError message={error} />
         <input type="hidden" name="sessionId" value={sessionId} />
         <input type="hidden" name="annotationId" value={annotationId} />
         <Textarea

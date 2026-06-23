@@ -101,7 +101,11 @@ export default async function PatientDetailPage({
                     {reminder.status}
                   </p>
                   {reminder.status === "pending" && (
-                    <ActionForm action={resolveReminderAction} className="mt-3">
+                    <ActionForm
+                      action={resolveReminderAction}
+                      className="mt-3"
+                      successMessage="toast.contactRegistered"
+                    >
                       <input type="hidden" name="patientId" value={id} />
                       <input type="hidden" name="reminderId" value={reminder.id} />
                       <input type="hidden" name="type" value="whatsapp" />
@@ -133,7 +137,11 @@ export default async function PatientDetailPage({
         <aside className="space-y-6 lg:col-span-1">
           <Card className="space-y-4">
             <h2 className="text-lg font-medium text-gray-900">{t("patients.patientData")}</h2>
-            <ActionForm action={updatePatientAction} className="space-y-4">
+            <ActionForm
+              action={updatePatientAction}
+              className="space-y-4"
+              successMessage="toast.patientSaved"
+            >
               <input type="hidden" name="patientId" value={id} />
               <div>
                 <Label htmlFor="name">{t("common.name")}</Label>

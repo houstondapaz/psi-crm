@@ -45,6 +45,7 @@ export function DeletePatientForm({ patientId, compact = false }: DeletePatientF
               <ActionForm
                 action={deletePatientAction}
                 className="flex justify-end gap-2 pt-2"
+                successMessage="toast.patientDeleted"
               >
                 <input type="hidden" name="patientId" value={patientId} />
                 <Dialog.Close render={<Button variant="secondary" type="button" />}>

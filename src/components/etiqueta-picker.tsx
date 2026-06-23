@@ -6,7 +6,7 @@ import type { ActionState } from "@/lib/action-state";
 import { LABEL_COLORS, LABEL_COLOR_CLASSES, type LabelColor } from "@/lib/label-colors";
 import { getLabelColorLabel, LOCALE, t } from "@/lib/i18n";
 import { LabelChip } from "@/components/label-chip";
-import { FormError } from "@/components/ui/form-error";
+import { showErrorToast, showSuccessToast } from "@/components/ui/toast";
 
 export type EtiquetaOption = {
   id: string;
@@ -57,7 +57,6 @@ export function EtiquetaPicker({
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [createColor, setCreateColor] = useState<LabelColor>("blue");
-  const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
 
   const attachedIds = new Set(attached.map((label) => label.id));
@@ -98,15 +97,16 @@ export function EtiquetaPicker({
   function runAction(
     action: (prevState: ActionState, formData: FormData) => Promise<ActionState>,
     fields: Record<string, string>,
+    successMessage: string,
   ) {
     startTransition(async () => {
       const result = await action({}, buildFormData(hiddenFields, fields));
       if (result.error) {
-        setError(result.error);
+        showErrorToast(result.error);
         return;
       }
 
-      setError(undefined);
+      showSuccessToast(successMessage);
       setQuery("");
       setOpen(false);
       router.refresh();
@@ -114,11 +114,11 @@ export function EtiquetaPicker({
   }
 
   function attachLabel(labelId: string) {
-    runAction(attachAction, { labelId });
+    runAction(attachAction, { labelId }, t("toast.labelAttached"));
   }
 
   function detachLabel(labelId: string) {
-    runAction(detachAction, { labelId });
+    runAction(detachAction, { labelId }, t("toast.labelDetached"));
   }
 
   function createLabel() {
@@ -126,10 +126,14 @@ export function EtiquetaPicker({
     if (!name) {
       return;
     }
-    runAction(createAndAttachAction, {
-      name,
-      color: createColor,
-    });
+    runAction(
+      createAndAttachAction,
+      {
+        name,
+        color: createColor,
+      },
+      t("toast.labelCreated"),
+    );
   }
 
   function selectActiveOption() {
@@ -185,7 +189,6 @@ export function EtiquetaPicker({
 
   return (
     <div ref={containerRef} className="relative">
-      <FormError message={error} />
       <div
         className={`flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5 shadow-sm focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 ${
           isPending ? "opacity-70" : ""

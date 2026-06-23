@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppProviders } from "@/components/app-providers";
 import { LOCALE, t } from "@/lib/i18n";
 import "./globals.css";
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang={LOCALE}>
       <body className="relative min-h-screen bg-gray-50 text-gray-900 antialiased">
-        <div className="isolate">{children}</div>
+        <AppProviders>
+          <div className="isolate">{children}</div>
+        </AppProviders>
       </body>
     </html>
   );
