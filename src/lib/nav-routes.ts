@@ -14,22 +14,16 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
       pathname === "/dashboard" || pathname.startsWith("/dashboard/"),
   },
   {
-    href: "/patients",
-    labelKey: "app.navPatients",
-    match: (pathname) =>
-      pathname === "/patients" || pathname.startsWith("/patients/"),
-  },
-  {
     href: "/sessions",
     labelKey: "app.navSessions",
     match: (pathname) =>
       pathname === "/sessions" || pathname.startsWith("/sessions/"),
   },
   {
-    href: "/products",
-    labelKey: "app.navProducts",
+    href: "/patients",
+    labelKey: "app.navPatients",
     match: (pathname) =>
-      pathname === "/products" || pathname.startsWith("/products/"),
+      pathname === "/patients" || pathname.startsWith("/patients/"),
   },
   {
     href: "/labels",
@@ -37,6 +31,12 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     match: (pathname) =>
       pathname === "/labels" || pathname.startsWith("/labels/"),
   },
+  {
+    href: "/products",
+    labelKey: "app.navProducts",
+    match: (pathname) =>
+      pathname === "/products" || pathname.startsWith("/products/"),
+  }
 ];
 
 export function resolveActiveNavItem(pathname: string): AppNavItem | undefined {
