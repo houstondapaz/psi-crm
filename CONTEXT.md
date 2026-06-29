@@ -13,8 +13,12 @@ O psicólogo que opera o consultório — cadastra pacientes, agenda consultas e
 _Avoid_: Psicólogo, Profissional, Admin
 
 **Paciente**:
-Pessoa atendida pelo psicólogo dentro de um consultório; objeto central do acompanhamento clínico e administrativo.
+Pessoa cadastrada no consultório; objeto central do acompanhamento clínico e administrativo. Pode estar em estágio **Lead** (em potencial, ainda sem acompanhamento) ou **Paciente** (em acompanhamento ativo). Na interface, as listagens separam os dois estágios; no domínio é o mesmo registro.
 _Avoid_: Cliente, Atendido
+
+**Lead**:
+Estágio inicial de um **Paciente** — pessoa em potencial, ainda não promovida a acompanhamento ativo. Compartilha a mesma estrutura de dados; a promoção para **Paciente** é uma transição de estágio irreversível, não um cadastro novo. Pode ter **Anotações**, **Etiquetas**, **Lembretes** e **Contatos**; **Sessões** só após a promoção. Listagem e detalhe em `/leads`; após promoção, o registro passa a `/patients`.
+_Avoid_: Prospecto, Cliente potencial
 
 **Endereço**:
 Local de residência ou atendimento de um **Paciente**, armazenado como texto livre; a busca por mapa na interface é apenas auxílio ao preenchimento.

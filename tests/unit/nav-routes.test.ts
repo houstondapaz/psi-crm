@@ -10,6 +10,8 @@ describe("resolveActiveNavItem", () => {
     ["/dashboard", "/dashboard"],
     ["/patients", "/patients"],
     ["/patients/abc-123", "/patients"],
+    ["/leads", "/leads"],
+    ["/leads/abc-123", "/leads"],
     ["/sessions", "/sessions"],
     ["/sessions/xyz-789", "/sessions"],
     ["/products", "/products"],
@@ -27,6 +29,7 @@ describe("resolveNavSectionLabelKey", () => {
   it.each([
     ["/dashboard", "app.navAgenda"],
     ["/patients/abc-123", "app.navPatients"],
+    ["/leads/abc-123", "app.navLeads"],
     ["/sessions/xyz-789", "app.navSessions"],
     ["/products", "app.navProducts"],
     ["/labels", "app.navLabels"],
@@ -39,10 +42,11 @@ describe("APP_NAV_ITEMS", () => {
   it("lists every primary app section", () => {
     expect(APP_NAV_ITEMS.map((item) => item.href)).toEqual([
       "/dashboard",
-      "/patients",
       "/sessions",
-      "/products",
+      "/patients",
+      "/leads",
       "/labels",
+      "/products",
     ]);
   });
 });

@@ -23,7 +23,7 @@ export default async function SessionsPage({
       : [];
   const [sessions, patients, catalog] = await Promise.all([
     listAllSessions(auth, { labelIds }),
-    listPatients(auth),
+    listPatients(auth, { status: "patient" }),
     listLabels(auth),
   ]);
 

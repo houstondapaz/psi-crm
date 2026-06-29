@@ -13,17 +13,14 @@ import {
 import { requireAuth } from "@/lib/auth/session";
 import { getPatientById } from "@/services/patient-service";
 import { listContactsByPatient, listRemindersByPatient } from "@/services/reminder-service";
-import { listSessionsByPatient } from "@/services/session-service";
 import { listLabels, listLabelsByPatient } from "@/services/label-service";
 import { listAnnotationsByPatient } from "@/services/patient-annotation-service";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { DeletePatientForm } from "@/components/delete-patient-form";
+import { PromotePatientForm } from "@/components/promote-patient-form";
 import { AddressInput } from "@/components/address-input";
 import { ActionForm } from "@/components/action-form";
 import { CreateReminderModal } from "@/components/create-reminder-modal";
-import { CreateSessionModal } from "@/components/create-session-modal";
-import { LabelFilter } from "@/components/label-filter";
-import { SessionList } from "@/components/session-list";
 import { AnnotationCard } from "@/components/annotation-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -33,30 +30,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { formatSessionDateTime, t } from "@/lib/i18n";
 import { toDatetimeLocalValue } from "@/lib/datetime";
 
-export default async function PatientDetailPage({
+export default async function LeadDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ label?: string | string[] }>;
 }) {
   const auth = await requireAuth();
   const { id } = await params;
-  const labelParams = await searchParams;
-  const labelParam = labelParams.label;
-  const labelIds = Array.isArray(labelParam)
-    ? labelParam
-    : labelParam
-      ? [labelParam]
-      : [];
   const patient = await getPatientById(auth, id);
-  if (!patient || patient.status !== "patient") {
+  if (!patient || patient.status !== "lead") {
     notFound();
   }
 
-  const [sessions, contacts, reminders, attachedLabels, catalog, annotations] =
-    await Promise.all([
-    listSessionsByPatient(auth, id, { labelIds }),
+  const [contacts, reminders, attachedLabels, catalog, annotations] = await Promise.all([
     listContactsByPatient(auth, id),
     listRemindersByPatient(auth, id),
     listLabelsByPatient(auth, id),
@@ -68,18 +54,15 @@ export default async function PatientDetailPage({
     <main className="mx-auto max-w-7xl space-y-8 p-4 sm:p-6">
       <div>
         <Link
-          href="/patients"
+          href="/leads"
           className="text-sm font-medium text-gray-600 transition hover:text-gray-900"
         >
-          {t("common.backToPatients")}
+          {t("common.backToLeads")}
         </Link>
         <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <h1 className="text-2xl font-bold text-gray-900">{patient.name}</h1>
           <div className="flex flex-wrap gap-2">
-            <CreateSessionModal
-              patients={[{ id, name: patient.name }]}
-              defaultPatientId={id}
-            />
+            <PromotePatientForm patientId={id} patientName={patient.name} />
             <CreateReminderModal patientId={id} />
           </div>
         </div>
@@ -119,16 +102,6 @@ export default async function PatientDetailPage({
                 <Button type="submit">{t("patients.addAnnotation")}</Button>
               </ActionForm>
             </Card>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-medium text-gray-900">{t("patients.sessions")}</h2>
-            <LabelFilter
-              catalog={catalog}
-              selectedIds={labelIds}
-              basePath={`/patients/${id}`}
-            />
-            <SessionList sessions={sessions} emptyMessage={t("patients.noSessions")} />
           </section>
 
           <section className="grid gap-6 sm:grid-cols-2">

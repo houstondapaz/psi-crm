@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { resetDatabase } from "../helpers/db";
 import { registerPractice } from "@/services/auth-service";
-import { createPatient, deletePatient, listPatients, updatePatient } from "@/services/patient-service";
+import { createPatient, deletePatient, listPatients, promotePatient, updatePatient } from "@/services/patient-service";
+import { createSession, scheduleSession } from "@/services/session-service";
+import { AppError } from "@/lib/errors";
 import {
   createPatientAnnotation,
   listAnnotationsByPatient,
@@ -43,6 +45,38 @@ describe("PatientService", () => {
 
     expect(patientsA).toHaveLength(1);
     expect(patientsA[0]?.name).toBe("Maria");
+  });
+
+  it("lists patients and leads separately by status", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "Maria", status: "patient" },
+    );
+    await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "João", status: "lead" },
+    );
+
+    const patients = await listPatients(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { status: "patient" },
+    );
+    const leads = await listPatients(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { status: "lead" },
+    );
+
+    expect(patients).toHaveLength(1);
+    expect(patients[0]?.name).toBe("Maria");
+    expect(leads).toHaveLength(1);
+    expect(leads[0]?.name).toBe("João");
   });
 
   it("creates patient with address and returns it in list", async () => {
@@ -181,6 +215,82 @@ describe("PatientService", () => {
       address: "Rua Augusta, 123 - São Paulo - SP",
       description: "Ansiedade generalizada",
     });
+  });
+
+  it("promotes lead to patient", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    const lead = await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "João", status: "lead" },
+    );
+
+    const promoted = await promotePatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      lead.id,
+    );
+
+    expect(promoted.status).toBe("patient");
+
+    const leads = await listPatients(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { status: "lead" },
+    );
+    const patients = await listPatients(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { status: "patient" },
+    );
+
+    expect(leads).toHaveLength(0);
+    expect(patients.some((patient) => patient.id === lead.id)).toBe(true);
+  });
+
+  it("rejects promoting a patient that is not a lead", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    const patient = await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "Maria" },
+    );
+
+    await expect(
+      promotePatient({ practiceId: auth.practice.id, userId: auth.user.id }, patient.id),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it("rejects creating a session for a lead", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    const lead = await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "João", status: "lead" },
+    );
+
+    await expect(
+      createSession({ practiceId: auth.practice.id, userId: auth.user.id }, { patientId: lead.id }),
+    ).rejects.toBeInstanceOf(AppError);
+
+    await expect(
+      scheduleSession(
+        { practiceId: auth.practice.id, userId: auth.user.id },
+        { patientId: lead.id, scheduledAt: new Date("2026-07-01T10:00:00Z") },
+      ),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it("deletes patient scoped to practice", async () => {

@@ -31,7 +31,7 @@ import type {
 } from '@prisma-next/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'sha256:64eb305fd65de6ad37a2986e1bd42a3f5b05d839a4be293c49168e8318c0ed7e'>;
+  StorageHashBase<'sha256:342ee54df6f55a096b51a42899a93f9b591b4f1e7b116607ddb4fc1a860ee50a'>;
 export type ExecutionHash =
   ExecutionHashBase<'sha256:9fbd51f72adfb2bd5be29489ff85046b416ab97eb5a9dc26a24a54a2846a8088'>;
 export type ProfileHash =
@@ -77,6 +77,7 @@ export type FieldOutputTypes = {
     readonly phone: CodecTypes['pg/text@1']['output'] | null;
     readonly address: CodecTypes['pg/text@1']['output'] | null;
     readonly description: CodecTypes['pg/text@1']['output'] | null;
+    readonly status: CodecTypes['pg/text@1']['output'];
     readonly createdAt: CodecTypes['pg/timestamptz@1']['output'];
   };
   readonly PatientAnnotation: {
@@ -186,6 +187,7 @@ export type FieldInputTypes = {
     readonly phone: CodecTypes['pg/text@1']['input'] | null;
     readonly address: CodecTypes['pg/text@1']['input'] | null;
     readonly description: CodecTypes['pg/text@1']['input'] | null;
+    readonly status: CodecTypes['pg/text@1']['input'];
     readonly createdAt: CodecTypes['pg/timestamptz@1']['input'];
   };
   readonly PatientAnnotation: {
@@ -514,6 +516,15 @@ type ContractBase = Omit<
                     readonly nativeType: 'text';
                     readonly codecId: 'pg/text@1';
                     readonly nullable: true;
+                  };
+                  readonly status: {
+                    readonly nativeType: 'text';
+                    readonly codecId: 'pg/text@1';
+                    readonly nullable: false;
+                    readonly default: {
+                      readonly kind: 'literal';
+                      readonly value: DefaultLiteralValue<'pg/text@1', 'patient'>;
+                    };
                   };
                   readonly createdAt: {
                     readonly nativeType: 'timestamptz';
@@ -1416,6 +1427,10 @@ type ContractBase = Omit<
             readonly nullable: true;
             readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
           };
+          readonly status: {
+            readonly nullable: false;
+            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+          };
           readonly createdAt: {
             readonly nullable: false;
             readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
@@ -1496,6 +1511,7 @@ type ContractBase = Omit<
             readonly phone: { readonly column: 'phone' };
             readonly address: { readonly column: 'address' };
             readonly description: { readonly column: 'description' };
+            readonly status: { readonly column: 'status' };
             readonly createdAt: { readonly column: 'createdAt' };
           };
         };
@@ -2488,6 +2504,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
@@ -2583,6 +2603,7 @@ type ContractBase = Omit<
                 readonly phone: { readonly column: 'phone' };
                 readonly address: { readonly column: 'address' };
                 readonly description: { readonly column: 'description' };
+                readonly status: { readonly column: 'status' };
                 readonly createdAt: { readonly column: 'createdAt' };
               };
             };

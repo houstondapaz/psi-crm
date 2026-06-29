@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth/session";
 import type { ActionState } from "@/lib/action-state";
 import { runAction } from "@/lib/safe-action";
-import { createPatient, deletePatient, updatePatient } from "@/services/patient-service";
+import { createPatient, deletePatient, getPatientById, promotePatient, updatePatient } from "@/services/patient-service";
 import {
   createPatientAnnotation,
   deletePatientAnnotation,
@@ -57,15 +57,25 @@ export async function createPatientAction(
 ): Promise<ActionState> {
   return runAction(async () => {
     const auth = await requireAuth();
+    const status = String(formData.get("status") ?? "patient");
     await createPatient(auth, {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? "") || undefined,
       phone: String(formData.get("phone") ?? "") || undefined,
       address: String(formData.get("address") ?? "") || undefined,
       description: String(formData.get("description") ?? "") || undefined,
+      status: status === "lead" ? "lead" : "patient",
     });
-    revalidatePath("/patients");
+    revalidatePath(status === "lead" ? "/leads" : "/patients");
   });
+}
+
+export async function createLeadAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  formData.set("status", "lead");
+  return createPatientAction(_prevState, formData);
 }
 
 export async function updatePatientAction(
@@ -83,7 +93,24 @@ export async function updatePatientAction(
       description: String(formData.get("description") ?? "") || undefined,
     });
     revalidatePath("/patients");
+    revalidatePath("/leads");
     revalidatePath(`/patients/${patientId}`);
+    revalidatePath(`/leads/${patientId}`);
+  });
+}
+
+export async function promotePatientAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await promotePatient(auth, patientId);
+    revalidatePath("/leads");
+    revalidatePath("/patients");
+    revalidatePath(`/leads/${patientId}`);
+    redirect(`/patients/${patientId}`);
   });
 }
 
@@ -94,11 +121,13 @@ export async function deletePatientAction(
   return runAction(async () => {
     const auth = await requireAuth();
     const patientId = String(formData.get("patientId") ?? "");
+    const patient = await getPatientById(auth, patientId);
     await deletePatient(auth, patientId);
     revalidatePath("/patients");
+    revalidatePath("/leads");
     revalidatePath("/sessions");
     revalidatePath("/dashboard");
-    redirect("/patients");
+    redirect(patient?.status === "lead" ? "/leads" : "/patients");
   });
 }
 
@@ -434,7 +463,9 @@ export async function deleteFileLinkAction(
 
 function revalidatePatientPaths(patientId: string) {
   revalidatePath(`/patients/${patientId}`);
+  revalidatePath(`/leads/${patientId}`);
   revalidatePath("/patients");
+  revalidatePath("/leads");
 }
 
 export async function createLabelAction(

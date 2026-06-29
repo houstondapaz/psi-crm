@@ -7,7 +7,7 @@ import {
 } from "@/services/label-service";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
-import { getPatientById } from "./patient-service";
+import { requireActivePatient } from "./patient-service";
 import { listAnnotationsBySession } from "./session-annotation-service";
 import { listReferralsBySession } from "@/services/product-service";
 
@@ -63,10 +63,7 @@ async function getSessionForPractice(auth: AuthContext, sessionId: string) {
 }
 
 export async function createSession(auth: AuthContext, input: CreateSessionInput) {
-  const patient = await getPatientById(auth, input.patientId);
-  if (!patient) {
-    throw new AppError("errors.patientNotFound");
-  }
+  await requireActivePatient(auth, input.patientId);
 
   const now = new Date();
   return db.orm.Session.create({
@@ -81,10 +78,7 @@ export async function createSession(auth: AuthContext, input: CreateSessionInput
 }
 
 export async function scheduleSession(auth: AuthContext, input: ScheduleSessionInput) {
-  const patient = await getPatientById(auth, input.patientId);
-  if (!patient) {
-    throw new AppError("errors.patientNotFound");
-  }
+  await requireActivePatient(auth, input.patientId);
 
   const now = new Date();
   return db.orm.Session.create({

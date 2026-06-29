@@ -20,6 +20,7 @@ export const messagesPtBr = {
     targetDate: "Data alvo",
     viewSession: "Ver sessão",
     backToPatients: "← Pacientes",
+    backToLeads: "← Leads",
     backToSessions: "← Sessões",
     selectProduct: "Selecione um produto...",
     selectPatient: "Selecione um paciente...",
@@ -49,6 +50,7 @@ export const messagesPtBr = {
     metadataDescription: "Controle de pacientes e atendimentos para psicólogos",
     navAgenda: "Agenda",
     navPatients: "Pacientes",
+    navLeads: "Leads",
     navSessions: "Sessões",
     navProducts: "Produtos",
     navLabels: "Etiquetas",
@@ -103,6 +105,15 @@ export const messagesPtBr = {
     deleteConfirm:
       "Tem certeza? Isso excluirá o paciente e todos os dados relacionados (sessões, anotações, lembretes e contatos).",
   },
+  leads: {
+    title: "Leads",
+    registeredCount: "{count} em potencial",
+    newLead: "Novo lead",
+    promoteToPatient: "Transformar em paciente",
+    promoteConfirm:
+      "Promover {name} a paciente? Essa ação não pode ser desfeita.",
+    promoted: "Lead promovido a paciente com sucesso",
+  },
   sessions: {
     title: "Sessões",
     description: "Todas as sessões do consultório",
@@ -154,6 +165,8 @@ export const messagesPtBr = {
     title: "Ops, algo deu errado",
     tryAgain: "Tentar novamente",
     patientNotFound: "Paciente não encontrado.",
+    patientNotLead: "Este registro já é um paciente em acompanhamento.",
+    leadCannotHaveSession: "Leads não podem ter sessões. Promova a paciente primeiro.",
     sessionNotFound: "Sessão não encontrada.",
     sessionNotScheduled: "Apenas sessões agendadas podem ser canceladas.",
     invalidLabelColor: "Cor de etiqueta inválida.",
@@ -189,6 +202,7 @@ export const messagesPtBr = {
     patientCreated: "Paciente cadastrado com sucesso",
     patientSaved: "Paciente salvo com sucesso",
     patientDeleted: "Paciente excluído com sucesso",
+    patientPromoted: "Lead promovido a paciente com sucesso",
     reminderCreated: "Lembrete criado com sucesso",
     contactRegistered: "Contato registrado com sucesso",
     sessionSaved: "Sessão salva com sucesso",

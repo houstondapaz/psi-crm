@@ -27,14 +27,15 @@ model User {
 }
 
 model Patient {
-  id         String   @id @default(uuid())
-  practiceId String
-  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
-  name       String
+  id          String   @id @default(uuid())
+  practiceId  String
+  practice    Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  name        String
   email       String?
   phone       String?
   address     String?
   description String?
+  status      String   @default("patient")
   createdAt   DateTime @default(now())
 
   sessions    Session[]

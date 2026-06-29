@@ -26,6 +26,12 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
       pathname === "/patients" || pathname.startsWith("/patients/"),
   },
   {
+    href: "/leads",
+    labelKey: "app.navLeads",
+    match: (pathname) =>
+      pathname === "/leads" || pathname.startsWith("/leads/"),
+  },
+  {
     href: "/labels",
     labelKey: "app.navLabels",
     match: (pathname) =>
