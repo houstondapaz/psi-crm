@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Menu } from "@/components/ui/menu";
 import { t } from "@/lib/i18n";
+import { toDatetimeLocalValue } from "@/lib/datetime";
 
 type SessionActionsMenuProps = {
   sessionId: string;
@@ -23,16 +24,6 @@ type SessionActionsMenuProps = {
 };
 
 type DialogMode = "cancel" | "delete" | "reschedule" | null;
-
-function toDatetimeLocalValue(isoDate: string | null) {
-  if (!isoDate) {
-    return "";
-  }
-  const date = new Date(isoDate);
-  const offset = date.getTimezoneOffset();
-  const local = new Date(date.getTime() - offset * 60 * 1000);
-  return local.toISOString().slice(0, 16);
-}
 
 const destructiveButtonClassName =
   "rounded-sm bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:not-data-disabled:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 data-disabled:opacity-50";

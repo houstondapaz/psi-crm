@@ -1,4 +1,5 @@
 import { LOCALE } from "@/lib/i18n";
+import { isSameLocalDay } from "@/lib/datetime";
 
 export type AgendaView = "month" | "week" | "day";
 
@@ -145,5 +146,5 @@ export function isSameDay(a: Date, b: Date) {
 }
 
 export function eventsForDay(events: AgendaEvent[], day: Date) {
-  return events.filter((event) => isSameDay(new Date(event.startsAt), day));
+  return events.filter((event) => isSameLocalDay(event.startsAt, day));
 }

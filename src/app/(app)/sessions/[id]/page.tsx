@@ -27,15 +27,7 @@ import { ActionForm } from "@/components/action-form";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { FileLinkCard } from "@/components/file-link-card";
 import { formatSessionDateTime, t , getSessionStatusLabel } from "@/lib/i18n";
-
-function toDatetimeLocalValue(date: Date | null) {
-  if (!date) {
-    return "";
-  }
-  const offset = date.getTimezoneOffset();
-  const local = new Date(date.getTime() - offset * 60 * 1000);
-  return local.toISOString().slice(0, 16);
-}
+import { toDatetimeLocalValue } from "@/lib/datetime";
 
 export default async function SessionDetailPage({
   params,

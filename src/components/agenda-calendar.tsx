@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { AgendaEvent, AgendaView } from "@/lib/agenda-utils";
@@ -10,7 +11,8 @@ import {
   formatAgendaDateParam,
   isSameDay,
 } from "@/lib/agenda-utils";
-import { formatTime, formatWeekdayShort, getWeekdayLabels, t } from "@/lib/i18n";
+import { formatLocalTime } from "@/lib/datetime";
+import { formatWeekdayShort, getWeekdayLabels, t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -23,8 +25,18 @@ type AgendaCalendarProps = {
 
 const weekdayLabels = getWeekdayLabels();
 
-function formatEventTime(startsAt: string) {
-  return formatTime(new Date(startsAt));
+function EventTime({ startsAt }: { startsAt: string }) {
+  const [time, setTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTime(formatLocalTime(startsAt));
+  }, [startsAt]);
+
+  if (!time) {
+    return null;
+  }
+
+  return <>{time} </>;
 }
 
 function eventStyles(type: AgendaEvent["type"]) {
@@ -54,7 +66,7 @@ function AgendaEventLink({ event }: { event: AgendaEvent }) {
       className={`block truncate rounded px-1.5 py-0.5 text-xs font-medium transition ${eventStyles(event.type)}`}
       title={`${event.title} · ${event.patientName}`}
     >
-      {showTime ? `${formatEventTime(event.startsAt)} ` : ""}
+      {showTime ? <EventTime startsAt={event.startsAt} /> : ""}
       {event.patientName}
     </Link>
   );
@@ -200,9 +212,14 @@ function WeekView({
                 >
                   <p className="font-medium">{event.title}</p>
                   <p className="text-xs opacity-90">
-                    {event.type === "session"
-                      ? `${formatEventTime(event.startsAt)} · `
-                      : ""}
+                    {event.type === "session" ? (
+                      <>
+                        <EventTime startsAt={event.startsAt} />
+                        {" · "}
+                      </>
+                    ) : (
+                      ""
+                    )}
                     {event.patientName}
                   </p>
                 </Link>
@@ -238,7 +255,14 @@ function DayView({
         >
           <p className="font-medium">{event.title}</p>
           <p className="text-sm opacity-90">
-            {event.type === "session" ? `${formatEventTime(event.startsAt)} · ` : ""}
+            {event.type === "session" ? (
+              <>
+                <EventTime startsAt={event.startsAt} />
+                {" · "}
+              </>
+            ) : (
+              ""
+            )}
             {event.patientName}
           </p>
         </Link>

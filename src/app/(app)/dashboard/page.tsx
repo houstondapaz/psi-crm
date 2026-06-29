@@ -9,6 +9,7 @@ import {
   parseAgendaDate,
   parseAgendaView,
 } from "@/services/agenda-service";
+import { formatAgendaDateParam } from "@/lib/agenda-utils";
 
 export default async function AgendaPage({
   searchParams,
@@ -31,7 +32,7 @@ export default async function AgendaPage({
       <AgendaCalendar
         events={events}
         view={view}
-        anchorDate={anchorDate.toISOString().slice(0, 10)}
+        anchorDate={formatAgendaDateParam(anchorDate)}
         title={getAgendaTitle(view, anchorDate)}
       />
     </main>
