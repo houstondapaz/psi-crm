@@ -6,9 +6,11 @@ import {
   createAndAttachSessionLabelAction,
   createAnnotationAction,
   createReferralAction,
+  deleteAnnotationAction,
   deleteReferralAction,
   detachSessionLabelAction,
   markSoldAction,
+  updateAnnotationAction,
   updateSessionAction,
 } from "@/app/actions/domain";
 import { requireAuth } from "@/lib/auth/session";
@@ -76,11 +78,14 @@ export default async function SessionDetailPage({
             {session.annotations.map((annotation) => (
               <AnnotationCard
                 key={annotation.id}
-                sessionId={session.id}
+                scopeField="sessionId"
+                scopeId={session.id}
                 annotationId={annotation.id}
                 content={annotation.content}
                 recordedAtLabel={formatSessionDateTime(annotation.recordedAt)}
                 recordedAtValue={toDatetimeLocalValue(annotation.recordedAt)}
+                updateAction={updateAnnotationAction}
+                deleteAction={deleteAnnotationAction}
               />
             ))}
             <Card className="space-y-4">

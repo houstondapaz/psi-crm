@@ -4,6 +4,7 @@ const deleteOrder = [
   db.orm.FileLink,
   db.orm.Referral,
   db.orm.SessionAnnotation,
+  db.orm.PatientAnnotation,
   db.orm.SessionLabel,
   db.orm.PatientLabel,
   db.orm.Reminder,

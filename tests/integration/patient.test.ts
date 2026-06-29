@@ -2,6 +2,10 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { resetDatabase } from "../helpers/db";
 import { registerPractice } from "@/services/auth-service";
 import { createPatient, deletePatient, listPatients, updatePatient } from "@/services/patient-service";
+import {
+  createPatientAnnotation,
+  listAnnotationsByPatient,
+} from "@/services/patient-annotation-service";
 
 describe("PatientService", () => {
   beforeEach(async () => {
@@ -89,6 +93,57 @@ describe("PatientService", () => {
     expect(patients[0]?.address).toBeNull();
   });
 
+  it("creates patient with description and returns it in list", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      {
+        name: "Maria",
+        description: "Paciente em acompanhamento semanal",
+      },
+    );
+
+    const patients = await listPatients({
+      practiceId: auth.practice.id,
+      userId: auth.user.id,
+    });
+
+    expect(patients[0]?.description).toBe("Paciente em acompanhamento semanal");
+  });
+
+  it("creates and lists patient annotations", async () => {
+    const auth = await registerPractice({
+      practiceName: "Consultório A",
+      userName: "Psicóloga A",
+      email: "a@example.com",
+      password: "senha123",
+    });
+
+    const patient = await createPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { name: "Maria" },
+    );
+
+    await createPatientAnnotation(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      { patientId: patient.id, content: "Primeira consulta" },
+    );
+
+    const annotations = await listAnnotationsByPatient(
+      { practiceId: auth.practice.id, userId: auth.user.id },
+      patient.id,
+    );
+
+    expect(annotations).toHaveLength(1);
+    expect(annotations[0]?.content).toBe("Primeira consulta");
+  });
+
   it("updates patient properties", async () => {
     const auth = await registerPractice({
       practiceName: "Consultório A",
@@ -110,6 +165,7 @@ describe("PatientService", () => {
         email: "maria.silva@example.com",
         phone: "11999999999",
         address: "Rua Augusta, 123 - São Paulo - SP",
+        description: "Ansiedade generalizada",
       },
     );
 
@@ -123,6 +179,7 @@ describe("PatientService", () => {
       email: "maria.silva@example.com",
       phone: "11999999999",
       address: "Rua Augusta, 123 - São Paulo - SP",
+      description: "Ansiedade generalizada",
     });
   });
 

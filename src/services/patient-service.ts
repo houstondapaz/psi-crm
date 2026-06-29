@@ -13,6 +13,7 @@ export type CreatePatientInput = {
   email?: string;
   phone?: string;
   address?: string;
+  description?: string;
 };
 
 export type UpdatePatientInput = {
@@ -20,6 +21,7 @@ export type UpdatePatientInput = {
   email?: string;
   phone?: string;
   address?: string;
+  description?: string;
 };
 
 export type PatientListItem = {
@@ -28,6 +30,7 @@ export type PatientListItem = {
   email: string | null;
   phone: string | null;
   address: string | null;
+  description: string | null;
   createdAt: Date;
   labels: LabelView[];
 };
@@ -45,6 +48,7 @@ export async function createPatient(auth: AuthContext, input: CreatePatientInput
     email: input.email ?? null,
     phone: input.phone ?? null,
     address: input.address ?? null,
+    description: input.description ?? null,
     createdAt: now,
   });
 }
@@ -94,6 +98,7 @@ export async function updatePatient(
       email: input.email ?? null,
       phone: input.phone ?? null,
       address: input.address ?? null,
+      description: input.description ?? null,
     });
 
   if (!updated) {

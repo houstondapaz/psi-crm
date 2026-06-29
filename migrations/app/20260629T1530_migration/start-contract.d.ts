@@ -31,9 +31,9 @@ import type {
 } from '@prisma-next/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'sha256:64eb305fd65de6ad37a2986e1bd42a3f5b05d839a4be293c49168e8318c0ed7e'>;
+  StorageHashBase<'sha256:47e4239eeb297e17be46a316cc6d9e423bcafa2b712f16cb5d3fe46ae969193e'>;
 export type ExecutionHash =
-  ExecutionHashBase<'sha256:9fbd51f72adfb2bd5be29489ff85046b416ab97eb5a9dc26a24a54a2846a8088'>;
+  ExecutionHashBase<'sha256:3d511e5f0e812a5999a540ee9a4ed36135f9a0f35428445576057ad448374e36'>;
 export type ProfileHash =
   ProfileHashBase<'sha256:9c8aa3114e84ed3b7ea2bd57526d9c2e1bf7c5292be694e9d3801f566fda7ccb'>;
 
@@ -76,15 +76,6 @@ export type FieldOutputTypes = {
     readonly email: CodecTypes['pg/text@1']['output'] | null;
     readonly phone: CodecTypes['pg/text@1']['output'] | null;
     readonly address: CodecTypes['pg/text@1']['output'] | null;
-    readonly description: CodecTypes['pg/text@1']['output'] | null;
-    readonly createdAt: CodecTypes['pg/timestamptz@1']['output'];
-  };
-  readonly PatientAnnotation: {
-    readonly id: Char<36>;
-    readonly practiceId: CodecTypes['pg/text@1']['output'];
-    readonly patientId: CodecTypes['pg/text@1']['output'];
-    readonly content: CodecTypes['pg/text@1']['output'];
-    readonly recordedAt: CodecTypes['pg/timestamptz@1']['output'];
     readonly createdAt: CodecTypes['pg/timestamptz@1']['output'];
   };
   readonly PatientLabel: {
@@ -185,15 +176,6 @@ export type FieldInputTypes = {
     readonly email: CodecTypes['pg/text@1']['input'] | null;
     readonly phone: CodecTypes['pg/text@1']['input'] | null;
     readonly address: CodecTypes['pg/text@1']['input'] | null;
-    readonly description: CodecTypes['pg/text@1']['input'] | null;
-    readonly createdAt: CodecTypes['pg/timestamptz@1']['input'];
-  };
-  readonly PatientAnnotation: {
-    readonly id: CodecTypes['sql/char@1']['input'];
-    readonly practiceId: CodecTypes['pg/text@1']['input'];
-    readonly patientId: CodecTypes['pg/text@1']['input'];
-    readonly content: CodecTypes['pg/text@1']['input'];
-    readonly recordedAt: CodecTypes['pg/timestamptz@1']['input'];
     readonly createdAt: CodecTypes['pg/timestamptz@1']['input'];
   };
   readonly PatientLabel: {
@@ -510,11 +492,6 @@ type ContractBase = Omit<
                     readonly codecId: 'pg/text@1';
                     readonly nullable: true;
                   };
-                  readonly description: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: true;
-                  };
                   readonly createdAt: {
                     readonly nativeType: 'timestamptz';
                     readonly codecId: 'pg/timestamptz@1';
@@ -535,76 +512,6 @@ type ContractBase = Omit<
                     readonly target: {
                       readonly namespaceId: 'public' & NamespaceId;
                       readonly tableName: 'practice';
-                      readonly columns: readonly ['id'];
-                    };
-                    readonly constraint: true;
-                    readonly index: true;
-                  },
-                ];
-              };
-              readonly patientAnnotation: {
-                columns: {
-                  readonly id: {
-                    readonly nativeType: 'character';
-                    readonly codecId: 'sql/char@1';
-                    readonly nullable: false;
-                    readonly typeParams: { readonly length: 36 };
-                  };
-                  readonly practiceId: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly patientId: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly content: {
-                    readonly nativeType: 'text';
-                    readonly codecId: 'pg/text@1';
-                    readonly nullable: false;
-                  };
-                  readonly recordedAt: {
-                    readonly nativeType: 'timestamptz';
-                    readonly codecId: 'pg/timestamptz@1';
-                    readonly nullable: false;
-                    readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  };
-                  readonly createdAt: {
-                    readonly nativeType: 'timestamptz';
-                    readonly codecId: 'pg/timestamptz@1';
-                    readonly nullable: false;
-                    readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  };
-                };
-                primaryKey: { readonly columns: readonly ['id'] };
-                uniques: readonly [];
-                indexes: readonly [];
-                foreignKeys: readonly [
-                  {
-                    readonly source: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'patientAnnotation';
-                      readonly columns: readonly ['practiceId'];
-                    };
-                    readonly target: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'practice';
-                      readonly columns: readonly ['id'];
-                    };
-                    readonly constraint: true;
-                    readonly index: true;
-                  },
-                  {
-                    readonly source: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'patientAnnotation';
-                      readonly columns: readonly ['patientId'];
-                    };
-                    readonly target: {
-                      readonly namespaceId: 'public' & NamespaceId;
-                      readonly tableName: 'patient';
                       readonly columns: readonly ['id'];
                     };
                     readonly constraint: true;
@@ -1412,27 +1319,12 @@ type ContractBase = Omit<
             readonly nullable: true;
             readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
           };
-          readonly description: {
-            readonly nullable: true;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
           readonly createdAt: {
             readonly nullable: false;
             readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
           };
         };
         readonly relations: {
-          readonly annotations: {
-            readonly to: {
-              readonly namespace: 'public' & NamespaceId;
-              readonly model: 'PatientAnnotation';
-            };
-            readonly cardinality: '1:N';
-            readonly on: {
-              readonly localFields: readonly ['id'];
-              readonly targetFields: readonly ['patientId'];
-            };
-          };
           readonly contacts: {
             readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Contact' };
             readonly cardinality: '1:N';
@@ -1495,69 +1387,6 @@ type ContractBase = Omit<
             readonly email: { readonly column: 'email' };
             readonly phone: { readonly column: 'phone' };
             readonly address: { readonly column: 'address' };
-            readonly description: { readonly column: 'description' };
-            readonly createdAt: { readonly column: 'createdAt' };
-          };
-        };
-      };
-      readonly PatientAnnotation: {
-        readonly fields: {
-          readonly id: {
-            readonly nullable: false;
-            readonly type: {
-              readonly kind: 'scalar';
-              readonly codecId: 'sql/char@1';
-              readonly typeParams: { readonly length: 36 };
-            };
-          };
-          readonly practiceId: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly patientId: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly content: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-          };
-          readonly recordedAt: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-          };
-          readonly createdAt: {
-            readonly nullable: false;
-            readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-          };
-        };
-        readonly relations: {
-          readonly patient: {
-            readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Patient' };
-            readonly cardinality: 'N:1';
-            readonly on: {
-              readonly localFields: readonly ['patientId'];
-              readonly targetFields: readonly ['id'];
-            };
-          };
-          readonly practice: {
-            readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Practice' };
-            readonly cardinality: 'N:1';
-            readonly on: {
-              readonly localFields: readonly ['practiceId'];
-              readonly targetFields: readonly ['id'];
-            };
-          };
-        };
-        readonly storage: {
-          readonly table: 'patientAnnotation';
-          readonly namespaceId: 'public';
-          readonly fields: {
-            readonly id: { readonly column: 'id' };
-            readonly practiceId: { readonly column: 'practiceId' };
-            readonly patientId: { readonly column: 'patientId' };
-            readonly content: { readonly column: 'content' };
-            readonly recordedAt: { readonly column: 'recordedAt' };
             readonly createdAt: { readonly column: 'createdAt' };
           };
         };
@@ -1638,17 +1467,6 @@ type ContractBase = Omit<
           };
           readonly labels: {
             readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Label' };
-            readonly cardinality: '1:N';
-            readonly on: {
-              readonly localFields: readonly ['id'];
-              readonly targetFields: readonly ['practiceId'];
-            };
-          };
-          readonly patientAnnotations: {
-            readonly to: {
-              readonly namespace: 'public' & NamespaceId;
-              readonly model: 'PatientAnnotation';
-            };
             readonly cardinality: '1:N';
             readonly on: {
               readonly localFields: readonly ['id'];
@@ -2216,10 +2034,6 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'SessionAnnotation';
     };
-    readonly patientAnnotation: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'PatientAnnotation';
-    };
     readonly contact: { readonly namespace: 'public' & NamespaceId; readonly model: 'Contact' };
     readonly reminder: { readonly namespace: 'public' & NamespaceId; readonly model: 'Reminder' };
     readonly product: { readonly namespace: 'public' & NamespaceId; readonly model: 'Product' };
@@ -2484,27 +2298,12 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly description: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
               };
             };
             readonly relations: {
-              readonly annotations: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'PatientAnnotation';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['patientId'];
-                };
-              };
               readonly contacts: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2582,75 +2381,6 @@ type ContractBase = Omit<
                 readonly email: { readonly column: 'email' };
                 readonly phone: { readonly column: 'phone' };
                 readonly address: { readonly column: 'address' };
-                readonly description: { readonly column: 'description' };
-                readonly createdAt: { readonly column: 'createdAt' };
-              };
-            };
-          };
-          readonly PatientAnnotation: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly practiceId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly patientId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly content: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly recordedAt: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/timestamptz@1' };
-              };
-            };
-            readonly relations: {
-              readonly patient: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Patient';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['patientId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly practice: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Practice';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['practiceId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'patientAnnotation';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly practiceId: { readonly column: 'practiceId' };
-                readonly patientId: { readonly column: 'patientId' };
-                readonly content: { readonly column: 'content' };
-                readonly recordedAt: { readonly column: 'recordedAt' };
                 readonly createdAt: { readonly column: 'createdAt' };
               };
             };
@@ -2745,17 +2475,6 @@ type ContractBase = Omit<
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Label';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['practiceId'];
-                };
-              };
-              readonly patientAnnotations: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'PatientAnnotation';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -3414,10 +3133,6 @@ type ContractBase = Omit<
         },
         {
           readonly ref: { readonly table: 'patient'; readonly column: 'id' };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
-        },
-        {
-          readonly ref: { readonly table: 'patientAnnotation'; readonly column: 'id' };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {

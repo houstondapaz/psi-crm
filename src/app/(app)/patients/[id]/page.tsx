@@ -3,15 +3,19 @@ import { notFound } from "next/navigation";
 import {
   attachPatientLabelAction,
   createAndAttachPatientLabelAction,
+  createPatientAnnotationAction,
   detachPatientLabelAction,
+  deletePatientAnnotationAction,
   resolveReminderAction,
   updatePatientAction,
+  updatePatientAnnotationAction,
 } from "@/app/actions/domain";
 import { requireAuth } from "@/lib/auth/session";
 import { getPatientById } from "@/services/patient-service";
 import { listContactsByPatient, listRemindersByPatient } from "@/services/reminder-service";
 import { listSessionsByPatient } from "@/services/session-service";
 import { listLabels, listLabelsByPatient } from "@/services/label-service";
+import { listAnnotationsByPatient } from "@/services/patient-annotation-service";
 import { EtiquetaPicker } from "@/components/etiqueta-picker";
 import { DeletePatientForm } from "@/components/delete-patient-form";
 import { AddressInput } from "@/components/address-input";
@@ -20,11 +24,14 @@ import { CreateReminderModal } from "@/components/create-reminder-modal";
 import { CreateSessionModal } from "@/components/create-session-modal";
 import { LabelFilter } from "@/components/label-filter";
 import { SessionList } from "@/components/session-list";
+import { AnnotationCard } from "@/components/annotation-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { formatSessionDateTime, t } from "@/lib/i18n";
+import { toDatetimeLocalValue } from "@/lib/datetime";
 
 export default async function PatientDetailPage({
   params,
@@ -47,12 +54,14 @@ export default async function PatientDetailPage({
     notFound();
   }
 
-  const [sessions, contacts, reminders, attachedLabels, catalog] = await Promise.all([
+  const [sessions, contacts, reminders, attachedLabels, catalog, annotations] =
+    await Promise.all([
     listSessionsByPatient(auth, id, { labelIds }),
     listContactsByPatient(auth, id),
     listRemindersByPatient(auth, id),
     listLabelsByPatient(auth, id),
     listLabels(auth),
+    listAnnotationsByPatient(auth, id),
   ]);
 
   return (
@@ -78,6 +87,40 @@ export default async function PatientDetailPage({
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
+          <section className="space-y-4">
+            <h2 className="text-lg font-medium text-gray-900">{t("patients.annotations")}</h2>
+            {annotations.map((annotation) => (
+              <AnnotationCard
+                key={annotation.id}
+                scopeField="patientId"
+                scopeId={id}
+                annotationId={annotation.id}
+                content={annotation.content}
+                recordedAtLabel={formatSessionDateTime(annotation.recordedAt)}
+                recordedAtValue={toDatetimeLocalValue(annotation.recordedAt)}
+                updateAction={updatePatientAnnotationAction}
+                deleteAction={deletePatientAnnotationAction}
+              />
+            ))}
+            <Card className="space-y-4">
+              <h3 className="font-medium text-gray-900">{t("patients.newAnnotation")}</h3>
+              <ActionForm
+                action={createPatientAnnotationAction}
+                className="space-y-3"
+                successMessage="toast.created"
+              >
+                <input type="hidden" name="patientId" value={id} />
+                <Textarea
+                  name="content"
+                  placeholder={t("patients.annotationPlaceholder")}
+                  className="min-h-24"
+                  required
+                />
+                <Button type="submit">{t("patients.addAnnotation")}</Button>
+              </ActionForm>
+            </Card>
+          </section>
+
           <section className="space-y-3">
             <h2 className="text-lg font-medium text-gray-900">{t("patients.sessions")}</h2>
             <LabelFilter
@@ -177,6 +220,15 @@ export default async function PatientDetailPage({
                 <div className="mt-1">
                   <AddressInput id="address" defaultValue={patient.address ?? ""} />
                 </div>
+              </div>
+              <div>
+                <Label htmlFor="description">{t("common.description")}</Label>
+                <Textarea
+                  className="mt-1 min-h-20"
+                  id="description"
+                  name="description"
+                  defaultValue={patient.description ?? ""}
+                />
               </div>
               <Button type="submit">{t("common.save")}</Button>
             </ActionForm>

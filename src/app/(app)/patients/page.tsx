@@ -46,7 +46,7 @@ export default async function PatientsPage({
               >
                 <p className="font-medium text-gray-900">{patient.name}</p>
                 <p className="text-sm text-gray-600">
-                  {patient.email ?? patient.phone ?? t("common.noContact")}
+                  {patient.description ?? t("patients.noDescription")}
                 </p>
                 {patient.labels.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1.5">

@@ -1,10 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import {
-  deleteAnnotationAction,
-  updateAnnotationAction,
-} from "@/app/actions/domain";
+import type { ActionState } from "@/lib/action-state";
 import { initialActionState } from "@/lib/action-state";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,11 +10,20 @@ import { t } from "@/lib/i18n";
 import { useActionFeedback } from "@/lib/use-action-feedback";
 
 type AnnotationCardProps = {
-  sessionId: string;
   annotationId: string;
   content: string;
   recordedAtLabel: string;
   recordedAtValue: string;
+  scopeField: "sessionId" | "patientId";
+  scopeId: string;
+  updateAction: (
+    prevState: ActionState,
+    formData: FormData,
+  ) => Promise<ActionState>;
+  deleteAction: (
+    prevState: ActionState,
+    formData: FormData,
+  ) => Promise<ActionState>;
 };
 
 function PencilIcon() {
@@ -74,11 +80,14 @@ const actionButtonClass =
   "inline-flex items-center gap-1.5 rounded-sm border px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2";
 
 export function AnnotationCard({
-  sessionId,
   annotationId,
   content,
   recordedAtLabel,
   recordedAtValue,
+  scopeField,
+  scopeId,
+  updateAction,
+  deleteAction,
 }: AnnotationCardProps) {
   const [editing, setEditing] = useState(false);
   const [editingTime, setEditingTime] = useState(false);
@@ -155,7 +164,7 @@ export function AnnotationCard({
         </button>
       </div>
       <form id={formId} action={updateFormAction} className="space-y-3">
-        <input type="hidden" name="sessionId" value={sessionId} />
+        <input type="hidden" name={scopeField} value={scopeId} />
         <input type="hidden" name="annotationId" value={annotationId} />
         <Textarea
           name="content"

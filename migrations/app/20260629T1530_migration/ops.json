@@ -1,0 +1,194 @@
+[
+  {
+    "id": "table.patientAnnotation",
+    "label": "Create table \"patientAnnotation\"",
+    "summary": "Creates table \"patientAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "patientAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"patientAnnotation\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"patientAnnotation\"",
+        "sql": "CREATE TABLE \"public\".\"patientAnnotation\" (\n  \"content\" text NOT NULL,\n  \"createdAt\" timestamptz NOT NULL DEFAULT (now()),\n  \"id\" character(36) NOT NULL,\n  \"patientId\" text NOT NULL,\n  \"practiceId\" text NOT NULL,\n  \"recordedAt\" timestamptz NOT NULL DEFAULT (now()),\n  PRIMARY KEY (\"id\")\n)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"patientAnnotation\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "column.patient.description",
+    "label": "Add column \"description\" to \"patient\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "description",
+        "table": "patient"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"description\" is missing",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1\n  FROM information_schema.columns\n  WHERE table_schema = 'public'\n    AND table_name = 'patient'\n    AND column_name = 'description'\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"description\"",
+        "sql": "ALTER TABLE \"public\".\"patient\" ADD COLUMN \"description\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"description\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1\n  FROM information_schema.columns\n  WHERE table_schema = 'public'\n    AND table_name = 'patient'\n    AND column_name = 'description'\n)"
+      }
+    ]
+  },
+  {
+    "id": "index.patientAnnotation.patientAnnotation_practiceId_idx",
+    "label": "Create index \"patientAnnotation_practiceId_idx\" on \"patientAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "patientAnnotation_practiceId_idx",
+        "table": "patientAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"patientAnnotation_practiceId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation_practiceId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"patientAnnotation_practiceId_idx\"",
+        "sql": "CREATE INDEX \"patientAnnotation_practiceId_idx\" ON \"public\".\"patientAnnotation\" (\"practiceId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"patientAnnotation_practiceId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation_practiceId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "index.patientAnnotation.patientAnnotation_patientId_idx",
+    "label": "Create index \"patientAnnotation_patientId_idx\" on \"patientAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "patientAnnotation_patientId_idx",
+        "table": "patientAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"patientAnnotation_patientId_idx\" does not exist",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation_patientId_idx\"') IS NULL"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"patientAnnotation_patientId_idx\"",
+        "sql": "CREATE INDEX \"patientAnnotation_patientId_idx\" ON \"public\".\"patientAnnotation\" (\"patientId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"patientAnnotation_patientId_idx\" exists",
+        "sql": "SELECT to_regclass('\"public\".\"patientAnnotation_patientId_idx\"') IS NOT NULL"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.patientAnnotation.patientAnnotation_practiceId_fkey",
+    "label": "Add foreign key \"patientAnnotation_practiceId_fkey\" on \"patientAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "patientAnnotation_practiceId_fkey",
+        "table": "patientAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"patientAnnotation_practiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientAnnotation_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientAnnotation\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"patientAnnotation_practiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"patientAnnotation\"\nADD CONSTRAINT \"patientAnnotation_practiceId_fkey\"\nFOREIGN KEY (\"practiceId\")\nREFERENCES \"public\".\"practice\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"patientAnnotation_practiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientAnnotation_practiceId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientAnnotation\"')\n)"
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.patientAnnotation.patientAnnotation_patientId_fkey",
+    "label": "Add foreign key \"patientAnnotation_patientId_fkey\" on \"patientAnnotation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "patientAnnotation_patientId_fkey",
+        "table": "patientAnnotation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"patientAnnotation_patientId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientAnnotation_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientAnnotation\"')\n)"
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"patientAnnotation_patientId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"patientAnnotation\"\nADD CONSTRAINT \"patientAnnotation_patientId_fkey\"\nFOREIGN KEY (\"patientId\")\nREFERENCES \"public\".\"patient\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"patientAnnotation_patientId_fkey\" exists",
+        "sql": "SELECT EXISTS (\n  SELECT 1 FROM pg_constraint c\n  JOIN pg_namespace n ON c.connamespace = n.oid\n  WHERE c.conname = 'patientAnnotation_patientId_fkey'\n  AND n.nspname = 'public'\n  AND c.conrelid = to_regclass('\"public\".\"patientAnnotation\"')\n)"
+      }
+    ]
+  }
+]

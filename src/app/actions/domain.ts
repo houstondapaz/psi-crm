@@ -7,6 +7,11 @@ import { requireAuth } from "@/lib/auth/session";
 import type { ActionState } from "@/lib/action-state";
 import { runAction } from "@/lib/safe-action";
 import { createPatient, deletePatient, updatePatient } from "@/services/patient-service";
+import {
+  createPatientAnnotation,
+  deletePatientAnnotation,
+  updatePatientAnnotation,
+} from "@/services/patient-annotation-service";
 import { createReminder, resolveReminderAsContact } from "@/services/reminder-service";
 import {
   createAnnotation,
@@ -57,6 +62,7 @@ export async function createPatientAction(
       email: String(formData.get("email") ?? "") || undefined,
       phone: String(formData.get("phone") ?? "") || undefined,
       address: String(formData.get("address") ?? "") || undefined,
+      description: String(formData.get("description") ?? "") || undefined,
     });
     revalidatePath("/patients");
   });
@@ -74,6 +80,7 @@ export async function updatePatientAction(
       email: String(formData.get("email") ?? "") || undefined,
       phone: String(formData.get("phone") ?? "") || undefined,
       address: String(formData.get("address") ?? "") || undefined,
+      description: String(formData.get("description") ?? "") || undefined,
     });
     revalidatePath("/patients");
     revalidatePath(`/patients/${patientId}`);
@@ -237,6 +244,49 @@ export async function deleteAnnotationAction(
     const sessionId = String(formData.get("sessionId") ?? "");
     await deleteAnnotation(auth, String(formData.get("annotationId") ?? ""));
     revalidateSessionPaths(sessionId);
+  });
+}
+
+export async function createPatientAnnotationAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await createPatientAnnotation(auth, {
+      patientId,
+      content: String(formData.get("content") ?? ""),
+    });
+    revalidatePatientPaths(patientId);
+  });
+}
+
+export async function updatePatientAnnotationAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await updatePatientAnnotation(auth, {
+      annotationId: String(formData.get("annotationId") ?? ""),
+      content: String(formData.get("content") ?? ""),
+      recordedAt: new Date(String(formData.get("recordedAt") ?? "")),
+    });
+    revalidatePatientPaths(patientId);
+  });
+}
+
+export async function deletePatientAnnotationAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return runAction(async () => {
+    const auth = await requireAuth();
+    const patientId = String(formData.get("patientId") ?? "");
+    await deletePatientAnnotation(auth, String(formData.get("annotationId") ?? ""));
+    revalidatePatientPaths(patientId);
   });
 }
 
