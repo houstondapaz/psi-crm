@@ -35,15 +35,6 @@ export const LABEL_COLORS = [
 
 export type LabelColor = (typeof LABEL_COLORS)[number];
 
-const LEGACY_LABEL_COLORS = [
-  "slate",
-  "amber",
-  "teal",
-  "violet",
-] as const;
-
-export type LegacyLabelColor = (typeof LEGACY_LABEL_COLORS)[number];
-
 export const DEFAULT_LABEL_COLOR: LabelColor = "green";
 
 const LEGACY_COLOR_ALIASES: Record<string, LabelColor> = {
