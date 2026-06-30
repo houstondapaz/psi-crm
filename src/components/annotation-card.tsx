@@ -93,11 +93,11 @@ export function AnnotationCard({
   const [editingTime, setEditingTime] = useState(false);
   const formId = `annotation-form-${annotationId}`;
   const [updateState, updateFormAction, updatePending] = useActionState(
-    updateAnnotationAction,
+    updateAction,
     initialActionState,
   );
   const [deleteState, deleteFormAction, deletePending] = useActionState(
-    deleteAnnotationAction,
+    deleteAction,
     initialActionState,
   );
 
