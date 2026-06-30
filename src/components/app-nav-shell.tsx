@@ -8,6 +8,7 @@ import { t } from "@/lib/i18n";
 import type { MessageKey } from "@/lib/i18n";
 
 type AppNavShellProps = {
+  practiceName: string;
   userName: string;
   signOutButton: ReactNode;
 };
@@ -107,7 +108,11 @@ function MobilePageTitle({ labelKey }: { labelKey: MessageKey }) {
   );
 }
 
-export function AppNavShell({ userName, signOutButton }: AppNavShellProps) {
+export function AppNavShell({
+  practiceName,
+  userName,
+  signOutButton,
+}: AppNavShellProps) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const activeItem = resolveActiveNavItem(pathname);
@@ -143,9 +148,10 @@ export function AppNavShell({ userName, signOutButton }: AppNavShellProps) {
             <div className="flex min-w-0 items-center gap-2 md:gap-6">
               <Link
                 href="/dashboard"
-                className="shrink-0 text-lg font-bold text-gray-900"
+                className="shrink-0 truncate text-lg font-bold text-gray-900"
+                title={practiceName}
               >
-                {t("common.appName")}
+                {practiceName}
               </Link>
 
               <span className="text-gray-300 md:hidden" aria-hidden="true">
@@ -183,10 +189,11 @@ export function AppNavShell({ userName, signOutButton }: AppNavShellProps) {
             <div className="border-b border-gray-200 px-4 py-4">
               <Link
                 href="/dashboard"
-                className="text-lg font-bold text-gray-900"
+                className="truncate text-lg font-bold text-gray-900"
+                title={practiceName}
                 onClick={() => setMenuOpen(false)}
               >
-                {t("common.appName")}
+                {practiceName}
               </Link>
             </div>
 
