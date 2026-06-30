@@ -1,5 +1,6 @@
 import {
   LABEL_COLOR_MESSAGE_KEYS,
+  resolveLabelColor,
   type LabelColor,
 } from "@/lib/label-colors";
 import { messagesPtBr } from "./messages/pt-BR";
@@ -56,8 +57,8 @@ export function getWeekdayLabels(): string[] {
   return WEEKDAY_MESSAGE_KEYS.map((key) => t(key));
 }
 
-export function getLabelColorLabel(color: LabelColor): string {
-  return t(LABEL_COLOR_MESSAGE_KEYS[color]);
+export function getLabelColorLabel(color: LabelColor | string): string {
+  return t(LABEL_COLOR_MESSAGE_KEYS[resolveLabelColor(color)]);
 }
 
 const SESSION_STATUS_MESSAGE_KEYS = {

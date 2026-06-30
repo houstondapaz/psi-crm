@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Select } from "@/components/ui/select";
 import {
   LABEL_COLORS,
-  LABEL_COLOR_CLASSES,
   LABEL_COLOR_OPTION_STYLES,
-  isLabelColor,
+  isStoredLabelColor,
+  resolveLabelColor,
   type LabelColor,
 } from "@/lib/label-colors";
 import { getLabelColorLabel } from "@/lib/i18n";
@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
 type LabelColorSelectProps = {
   id: string;
   name?: string;
-  defaultValue: LabelColor;
+  defaultValue: LabelColor | string;
 };
 
 export function LabelColorSelect({
@@ -23,7 +23,8 @@ export function LabelColorSelect({
   name = "color",
   defaultValue,
 }: LabelColorSelectProps) {
-  const [color, setColor] = useState(defaultValue);
+  const resolvedDefault = resolveLabelColor(defaultValue);
+  const [color, setColor] = useState(resolvedDefault);
 
   return (
     <Select
@@ -31,11 +32,12 @@ export function LabelColorSelect({
       name={name}
       value={color}
       onValueChange={(value) => {
-        if (value && isLabelColor(value)) {
-          setColor(value);
+        if (value && isStoredLabelColor(value)) {
+          setColor(resolveLabelColor(value));
         }
       }}
-      className={cn("mt-1", LABEL_COLOR_CLASSES[color])}
+      className={cn("mt-1")}
+      style={LABEL_COLOR_OPTION_STYLES[color]}
     >
       {LABEL_COLORS.map((optionColor) => (
         <option

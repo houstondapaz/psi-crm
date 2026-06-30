@@ -1,18 +1,28 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useTransition } from "react";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ActionState } from "@/lib/action-state";
-import { LABEL_COLORS, LABEL_COLOR_CLASSES, type LabelColor } from "@/lib/label-colors";
-import { getLabelColorLabel, LOCALE, t } from "@/lib/i18n";
+import { DEFAULT_LABEL_COLOR, type LabelColor } from "@/lib/label-colors";
+import { t } from "@/lib/i18n";
 import { LabelChip } from "@/components/label-chip";
+import { LabelEditorForm } from "@/components/label-editor-form";
+import { LabelListRow } from "@/components/label-list-row";
+import { Dialog } from "@/components/ui/dialog";
+import { PencilSquareIcon, XMarkIcon } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import {
+  filterLabelsByQuery,
+  INITIAL_VISIBLE_LABELS,
+  LABEL_LIST_FOOTER_BUTTON_CLASS,
+  LOAD_MORE_LABELS_STEP,
+  normalizeLabelQuery,
+  type LabelListItem,
+} from "@/lib/label-list-utils";
 import { showErrorToast, showSuccessToast } from "@/components/ui/toast";
 
-export type EtiquetaOption = {
-  id: string;
-  name: string;
-  color: LabelColor;
-};
+export type EtiquetaOption = LabelListItem;
 
 type EtiquetaPickerProps = {
   attached: EtiquetaOption[];
@@ -37,10 +47,6 @@ function buildFormData(
   return formData;
 }
 
-function normalizeQuery(value: string) {
-  return value.trim().toLocaleLowerCase(LOCALE);
-}
-
 export function EtiquetaPicker({
   attached,
   catalog,
@@ -50,49 +56,34 @@ export function EtiquetaPicker({
   hiddenFields,
 }: EtiquetaPickerProps) {
   const router = useRouter();
-  const listboxId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [createColor, setCreateColor] = useState<LabelColor>("blue");
+  const [creating, setCreating] = useState(false);
+  const [query, setQuery] = useState("");
+  const [createName, setCreateName] = useState("");
+  const [createColor, setCreateColor] = useState<LabelColor>(DEFAULT_LABEL_COLOR);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_LABELS);
   const [isPending, startTransition] = useTransition();
 
   const attachedIds = new Set(attached.map((label) => label.id));
-  const normalizedQuery = normalizeQuery(query);
-
-  const suggestions = catalog.filter((label) => {
-    if (attachedIds.has(label.id)) {
-      return false;
-    }
-    if (!normalizedQuery) {
-      return true;
-    }
-    return normalizeQuery(label.name).includes(normalizedQuery);
-  });
-
-  const exactCatalogMatch = catalog.some(
-    (label) => normalizeQuery(label.name) === normalizedQuery,
-  );
-  const showCreate = normalizedQuery.length > 0 && !exactCatalogMatch;
-
-  const optionCount = suggestions.length + (showCreate ? 1 : 0);
+  const normalizedQuery = normalizeLabelQuery(query);
+  const filteredCatalog = filterLabelsByQuery(catalog, normalizedQuery);
+  const visibleLabels = filteredCatalog.slice(0, visibleCount);
+  const hasMore = filteredCatalog.length > visibleCount;
 
   useEffect(() => {
-    setActiveIndex(0);
-  }, [query, open, suggestions.length, showCreate]);
+    setVisibleCount(INITIAL_VISIBLE_LABELS);
+  }, [query, open]);
 
-  useEffect(() => {
-    function handlePointerDown(event: MouseEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setQuery("");
+      setCreating(false);
+      setCreateName("");
+      setCreateColor(DEFAULT_LABEL_COLOR);
+      setVisibleCount(INITIAL_VISIBLE_LABELS);
     }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, []);
+  }
 
   function runAction(
     action: (prevState: ActionState, formData: FormData) => Promise<ActionState>,
@@ -107,195 +98,155 @@ export function EtiquetaPicker({
       }
 
       showSuccessToast(successMessage);
-      setQuery("");
-      setOpen(false);
       router.refresh();
     });
   }
 
-  function attachLabel(labelId: string) {
+  function toggleLabel(labelId: string) {
+    if (attachedIds.has(labelId)) {
+      runAction(detachAction, { labelId }, t("toast.labelDetached"));
+      return;
+    }
     runAction(attachAction, { labelId }, t("toast.labelAttached"));
   }
 
-  function detachLabel(labelId: string) {
-    runAction(detachAction, { labelId }, t("toast.labelDetached"));
-  }
-
   function createLabel() {
-    const name = query.trim();
+    const name = createName.trim();
     if (!name) {
       return;
     }
     runAction(
       createAndAttachAction,
-      {
-        name,
-        color: createColor,
-      },
+      { name, color: createColor },
       t("toast.labelCreated"),
     );
+    setCreating(false);
+    setCreateName("");
+    setCreateColor(DEFAULT_LABEL_COLOR);
   }
-
-  function selectActiveOption() {
-    if (activeIndex < suggestions.length) {
-      const label = suggestions[activeIndex];
-      if (label) {
-        attachLabel(label.id);
-      }
-      return;
-    }
-    if (showCreate) {
-      createLabel();
-    }
-  }
-
-  function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setOpen(true);
-      setActiveIndex((index) => (optionCount === 0 ? 0 : (index + 1) % optionCount));
-      return;
-    }
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setOpen(true);
-      setActiveIndex((index) =>
-        optionCount === 0 ? 0 : (index - 1 + optionCount) % optionCount,
-      );
-      return;
-    }
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (open && optionCount > 0) {
-        selectActiveOption();
-      } else if (showCreate) {
-        createLabel();
-      }
-      return;
-    }
-    if (event.key === "Escape") {
-      setOpen(false);
-      return;
-    }
-    if (event.key === "Backspace" && query === "" && attached.length > 0) {
-      const last = attached[attached.length - 1];
-      if (last) {
-        detachLabel(last.id);
-      }
-    }
-  }
-
-  const showDropdown = open && (suggestions.length > 0 || showCreate);
 
   return (
-    <div ref={containerRef} className="relative">
-      <div
-        className={`flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1.5 shadow-sm focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 ${
-          isPending ? "opacity-70" : ""
-        }`}
-        onClick={() => inputRef.current?.focus()}
-      >
-        {attached.map((label) => (
-          <button
-            key={label.id}
-            type="button"
-            disabled={isPending}
-            onClick={(event) => {
-              event.stopPropagation();
-              detachLabel(label.id);
-            }}
-            className="group inline-flex items-center gap-0.5 rounded-full transition hover:opacity-80"
-            title={t("labels.remove", { name: label.name })}
-            aria-label={t("labels.removeAria", { name: label.name })}
-          >
-            <LabelChip name={label.name} color={label.color} />
-            <span className="pr-0.5 text-xs text-gray-400 group-hover:text-gray-600">×</span>
-          </button>
-        ))}
-        <input
-          ref={inputRef}
-          type="text"
-          role="combobox"
-          aria-expanded={showDropdown}
-          aria-controls={listboxId}
-          aria-autocomplete="list"
-          disabled={isPending}
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={handleInputKeyDown}
-          placeholder={attached.length === 0 ? t("labels.searchPlaceholder") : ""}
-          className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1.5 text-sm text-gray-900 outline-none placeholder:text-gray-400"
-        />
-      </div>
-
-      {showDropdown && (
-        <ul
-          id={listboxId}
-          role="listbox"
-          className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
-        >
-          {suggestions.map((label, index) => {
-            const active = index === activeIndex;
-            return (
-              <li key={label.id} role="presentation">
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={active}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onClick={() => attachLabel(label.id)}
-                  className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition ${
-                    active ? "bg-gray-100" : "hover:bg-gray-50"
-                  }`}
-                >
-                  <LabelChip name={label.name} color={label.color} />
-                </button>
-              </li>
-            );
-          })}
-
-          {showCreate && (
-            <li role="presentation" className="border-t border-gray-100">
-              <div
-                className={`px-3 py-2 ${activeIndex === suggestions.length ? "bg-gray-100" : ""}`}
-                onMouseEnter={() => setActiveIndex(suggestions.length)}
-              >
-                <p className="text-sm font-medium text-gray-900">
-                  {t("labels.createNamed", { name: query.trim() })}
-                </p>
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <div className="flex flex-wrap gap-1">
-                    {LABEL_COLORS.map((color) => (
-                      <button
-                        key={color}
-                        type="button"
-                        aria-label={getLabelColorLabel(color)}
-                        onClick={() => setCreateColor(color)}
-                        className={`h-6 w-6 rounded-full border-2 ${LABEL_COLOR_CLASSES[color]} ${
-                          createColor === color ? "border-gray-900" : "border-transparent"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={createLabel}
-                    className="rounded-sm bg-gray-900 px-3 py-1 text-xs font-medium text-white transition hover:bg-gray-700"
-                  >
-                    {t("labels.createAndApply")}
-                  </button>
-                </div>
-              </div>
-            </li>
-          )}
-        </ul>
+    <div className={isPending ? "opacity-70" : ""}>
+      {attached.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {attached.map((label) => (
+            <LabelChip key={label.id} name={label.name} color={label.color} />
+          ))}
+        </div>
       )}
 
-      {attached.length === 0 && !open && !query && (
+      <Dialog.Root open={open} onOpenChange={handleOpenChange}>
+        <Dialog.Trigger
+          render={
+            <button
+              type="button"
+              className="rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+            />
+          }
+        >
+          {t("labels.editLabels")}
+        </Dialog.Trigger>
+
+        <Dialog.Portal>
+          <Dialog.Backdrop />
+          <Dialog.Popup className="flex max-h-[min(32rem,90dvh)] max-w-sm flex-col overflow-hidden">
+            {creating ? (
+              <div className="flex min-h-0 flex-1 flex-col">
+                <LabelEditorForm
+                  title={t("labels.createLabel")}
+                  name={createName}
+                  color={createColor}
+                  disabled={isPending}
+                  showDelete={false}
+                  onNameChange={setCreateName}
+                  onColorChange={setCreateColor}
+                  onBack={createLabel}
+                  onClose={() => setCreating(false)}
+                  onRemoveColor={() => setCreateColor(DEFAULT_LABEL_COLOR)}
+                />
+              </div>
+            ) : (
+              <div className="flex min-h-0 flex-1 flex-col">
+                <div className="relative shrink-0 border-b border-gray-200 px-4 py-3">
+                  <Dialog.Close
+                    render={
+                      <button
+                        type="button"
+                        aria-label={t("common.cancel")}
+                        className="absolute top-2 right-2 rounded p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                      />
+                    }
+                  >
+                    <XMarkIcon className="size-5" />
+                  </Dialog.Close>
+                  <Dialog.Title className="text-center text-base font-semibold">
+                    {t("labels.title")}
+                  </Dialog.Title>
+                </div>
+
+                <div className="shrink-0 px-4 pt-4">
+                  <Input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder={t("labels.searchPlaceholder")}
+                    aria-label={t("labels.searchPlaceholder")}
+                  />
+                </div>
+
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 py-4">
+                  {filteredCatalog.length === 0 ? (
+                    <p className="text-sm text-gray-500">{t("labels.noResults")}</p>
+                  ) : (
+                    visibleLabels.map((label) => (
+                      <LabelListRow
+                        key={label.id}
+                        name={label.name}
+                        color={label.color}
+                        checked={attachedIds.has(label.id)}
+                        disabled={isPending}
+                        onToggle={() => toggleLabel(label.id)}
+                        trailing={
+                          <Link
+                            href="/labels"
+                            aria-label={t("labels.editLabel", { name: label.name })}
+                            className="shrink-0 rounded p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+                          >
+                            <PencilSquareIcon />
+                          </Link>
+                        }
+                      />
+                    ))
+                  )}
+                </div>
+
+                <div className="shrink-0 space-y-2 border-t border-gray-200 px-4 py-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCreating(true);
+                      setCreateName(query.trim());
+                    }}
+                    className={LABEL_LIST_FOOTER_BUTTON_CLASS}
+                  >
+                    {t("labels.createNew")}
+                  </button>
+                  {hasMore && (
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((count) => count + LOAD_MORE_LABELS_STEP)}
+                      className={LABEL_LIST_FOOTER_BUTTON_CLASS}
+                    >
+                      {t("labels.showMore")}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </Dialog.Popup>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {attached.length === 0 && (
         <p className="mt-2 text-sm text-gray-500">{t("labels.noneApplied")}</p>
       )}
     </div>

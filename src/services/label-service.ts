@@ -1,7 +1,7 @@
 import { LOCALE } from "@/lib/i18n";
 import { AppError } from "@/lib/errors";
 import { db } from "@/prisma/db";
-import { isLabelColor, type LabelColor } from "@/lib/label-colors";
+import { isStoredLabelColor, resolveLabelColor, type LabelColor } from "@/lib/label-colors";
 import type { AuthContext } from "./types";
 import { asEntityId } from "./types";
 import { getPatientById } from "./patient-service";
@@ -23,10 +23,10 @@ export type UpdateLabelInput = {
 };
 
 function assertLabelColor(color: string): LabelColor {
-  if (!isLabelColor(color)) {
+  if (!isStoredLabelColor(color)) {
     throw new AppError("errors.invalidLabelColor");
   }
-  return color;
+  return resolveLabelColor(color);
 }
 
 function toLabelView(label: {
